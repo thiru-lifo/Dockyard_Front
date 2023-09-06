@@ -10,6 +10,8 @@ export class AnlaysiHomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
+    
   }
 
 }
