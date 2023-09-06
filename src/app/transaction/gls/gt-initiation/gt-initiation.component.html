@@ -1,0 +1,1270 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>{{formNAME}}</h3>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-right">
+                           <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary btn-round-sm" (click)="getInitiationTemplate()">Add </a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="tabs-external tabstyle2">
+                      <div class="container table-options">
+                         <div class="row">
+                            <div class="col-md-6">
+                               <mat-paginator [pageSize]="10" #paginationPending="matPaginator"
+                               [length]="this.dataSourcePending?.filteredData?.length"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                               </mat-paginator>
+                            </div>
+                            <div class="col-md-6">
+                               <mat-form-field appearance="standard">
+                                   <mat-label>Search your text here</mat-label>
+                                   <input matInput (keyup)="applyFilterPending($event)" class="search-mat-table" #input >
+                               </mat-form-field>
+                            </div>
+                         </div>
+                      </div>
+                                       <div class="container-fluid">
+                      <form [formGroup]="searchForm">
+          <div class="form-row form-style-md">
+               <div class="col-md-3" >
+              
+                    <div class="matt-group">
+                        <mat-label>Search Project</mat-label>
+                        <mat-form-field appearance="fill" >
+                        <mat-select formControlName="project" placeholder="Select Project" (selectionChange)="chooseCountry($event.value)">
+                          <mat-option *ngFor="let project of projectslist" [value]="project.id">{{project.name}}</mat-option>
+                            </mat-select>
+                      </mat-form-field>
+
+                    </div>
+                </div>
+               
+          
+          <div class="col-md-9">
+             <div class="button-group-lg button-group-md mt-4">
+                <a href="javascript:void(0);" class="btn btn-outline-primary btn-lg" (click)="clear()">Clear</a>
+                <a href="javascript:void(0);" class="btn btn-primary btn-lg" type="submit" (click)="search()">Search</a>
+             </div>
+          </div>
+          </div>
+       
+
+   </form>
+</div>
+                      <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSourcePending" class="mat-elevation-z8">
+                           <ng-container matColumnDef="project_name">
+                            <th mat-header-cell *matHeaderCellDef><b> Project Name </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.project.name?country.project.name:'-'}}</td>
+                         </ng-container>
+                           
+                         <ng-container matColumnDef="requested_on">
+                            <th mat-header-cell *matHeaderCellDef><b> Created On </b></th>
+                            <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY')}} </td>
+                         </ng-container>
+                         
+                         <ng-container matColumnDef="approval">
+                            <th mat-header-cell *matHeaderCellDef><b> Approval </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#activity-modal" (click)="approval(country)">
+                            <span xclass="material-icons" [ngStyle]="{'color':country.approved_status == 2 ? 'green' : ''}">{{(country.global_status.length>0 ? country.global_status[0].name:'Click to approve') | titlecase}}</span></a> </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="ship" >
+                           <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container><b>Ship</b></ng-container></th>
+                           <td class="text-center" mat-cell *matCellDef="let country">
+                              <a href="#" data-toggle="modal" data-target="#crud-ship" class="edit-icon text-primary" (click)="shipDetails(country)" title="Ship"><span class="material-icons-outlined">directions_boat</span></a>
+                           </td>
+                        </ng-container>
+
+                       <ng-container matColumnDef="responsibility" >
+
+                          <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container><b>Responsibility</b></ng-container></th>
+                          <td class="text-center" mat-cell *matCellDef="let country">
+                           
+                             <a href="#" data-toggle="modal" data-target="#responsibility-modal" (click)="onResponsibilityLoad(country)" class="edit-icon text-primary"><span class="material-icons-outlined">checklist</span>
+                             </a>
+                            </td>
+                          </ng-container>
+
+
+                         <ng-container matColumnDef="view" >
+                           <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                           <td class="text-center" mat-cell *matCellDef="let project">
+                              <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(project)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                        </ng-container>
+
+                         <ng-container matColumnDef="edit" >
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country">
+                               <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary"  (click)="editOption(country)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="delete">
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="noData">
+                            <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsPending.length" class="norecord">
+                                No Records Found!
+                            </th >
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsPending"></tr>
+                          <ng-container *ngIf="dataListPending.length>0">
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsPending;"></tr>
+                           </ng-container>
+                          <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourcePending && dataSourcePending.data.length > 0"></tr>
+                          
+                      </table>
+                      </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+
+
+
+
+
+
+<!-- Responsibility Modal -->
+<div class="modal fade master-modal-style" id="responsibility-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl">
+
+     <div class="modal-content">
+
+
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">{{crudName}} Responsibility</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+
+            <form [formGroup]="this.resForm" (ngSubmit)="onSubmitRes()">
+              <div class="form-row">
+
+
+               <div class="col-md-3">
+                  <div class="matt-group">
+                      <mat-label>Directorate <b class="star">*</b></mat-label>
+                      <mat-form-field appearance="legacy">
+                            <mat-select formControlName="directorate" placeholder="Select Directorate">
+
+                            <mat-option *ngFor="let unit of allUnits" [value]="unit.id">{{unit.name}}</mat-option>
+                            </mat-select>
+                        <!-- <mat-error *ngIf="Error('module','required')"></mat-error> -->
+                      </mat-form-field>
+                  </div>
+               </div>
+
+
+              <div class="col-md-2  col-md-3 matt-append-button">
+                  <div class="matt-group">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" mat-fab color="primary" (click)="onRoleAdd()"  ><mat-icon>add</mat-icon></button>
+                 </div>
+              </div>
+              <div class="col-md-4">&nbsp;</div>
+
+
+
+              <div class="col-md-12">
+               <ng-container formArrayName="formmapping" >
+                     <ng-container *ngFor="let formmapping of formmapping.controls; let i=index">
+                        <ng-container [formGroupName]="i">
+                           <div class="form-row">
+                              <div class="form-row" >
+                                 <!-- <div class="matt-group col-md-3">
+                                     <mat-label>Module</mat-label>
+                                      <mat-form-field appearance="fill" >
+                                         <mat-select formControlName="module" placeholder="Select Module" >
+                                             <mat-option *ngFor="let modules of module"  [value]="modules.id">{{modules.name}}</mat-option>
+                                          </mat-select>
+                                       </mat-form-field>
+                                  </div> -->
+                                  <div class="matt-group col-md-2">
+                                    <mat-label>Submodule</mat-label>
+                                    <mat-form-field appearance="fill" >
+                                    <mat-select formControlName="sub_module" placeholder="Select Submodule">
+                                      <ng-container *ngFor="let submodules of submodule">
+                                        <!-- <mat-option   [value]="submodules.id"*ngIf="formmapping.value.module!='' && (submodules.module.id==formmapping.value.module) "   
+
+                                        >{{submodules.name}}</mat-option> -->
+
+
+                                       <mat-option [value]="submodules.id">
+
+                                        {{submodules.name}}</mat-option>
+
+                                      </ng-container>
+                                    </mat-select>
+                                   </mat-form-field>
+                                 </div>
+                                 <div class="matt-group col-md-2">
+                                    <mat-label>Section</mat-label>
+                                    <mat-form-field appearance="fill" >
+                                    <mat-select formControlName="section" placeholder="Select Section"  >
+                                      <ng-container *ngFor="let sections of section">
+                                        <mat-option   [value]="sections.id" *ngIf="formmapping.value.sub_module!='' && (sections.sub_module.id==formmapping.value.sub_module)"
+
+                                        >{{sections.name}}</mat-option>
+                                       <!-- <mat-option [value]="sat.id" *ngIf="sat.trial_unit.id==items.value[i].trial_unit_id">{{sat.name}}</mat-option> -->
+                                      </ng-container>
+                                    </mat-select>
+                                   </mat-form-field>
+                                 </div>
+                                 <div class="matt-group col-md-2">
+                                    <mat-label>SubSection</mat-label>
+                                    <mat-form-field appearance="fill" >
+                                    <mat-select formControlName="sub_section" placeholder="Select Subsection"  >
+                                      <ng-container *ngFor="let subsections of subsection">
+                                        <mat-option   [value]="subsections.id"*ngIf=" formmapping.value.sub_module!='' && formmapping.value.section!='' && (subsections.sub_module.id==formmapping.value.sub_module)&& (subsections.global_section.id==formmapping.value.section)"
+
+                                        >{{subsections.name}}</mat-option>
+
+                                      </ng-container>
+                                    </mat-select>
+                                   </mat-form-field>
+                                 </div>                                       
+                                 <div class="matt-group col-md-2">
+                                    <mat-label>SubSubSection</mat-label>
+                                    <mat-form-field appearance="fill" >
+                                    <mat-select formControlName="sub_sub_section" placeholder="Select Subsubsection"  >
+                                      <ng-container *ngFor="let subsubsections of subsubsection">
+                                        <mat-option   [value]="subsubsections.id"*ngIf="formmapping.value.sub_module!='' && formmapping.value.section!=''&& formmapping.value.sub_section!='' && (subsubsections.sub_module.id==formmapping.value.sub_module)&& (subsubsections.global_section.id==formmapping.value.section)&& (subsubsections.global_sub_section.id==formmapping.value.sub_section)" 
+
+                                        >{{subsubsections.name}}</mat-option>
+
+                                      </ng-container>
+                                    </mat-select>
+                                   </mat-form-field>
+                                 </div>
+                         
+                              
+                              <div class="col-md-4 pos-relative matt-append-button">
+                                 <ng-container >                                 
+                                    <button class="add-intermediate-referral" type="button"  (click)="removeformmapping(i)" mat-fab color="warn"><mat-icon>remove</mat-icon></button>
+                                 </ng-container>
+                              </div>
+
+                           </div>
+                           </div>
+                  </ng-container>
+               </ng-container>
+               
+               </ng-container>
+           </div>
+
+
+
+
+               <div class="col-md-6" hidden>
+                  <div class="matt-group">
+                     <mat-form-field appearance="legacy">
+                        <input matInput placeholder="" formControlName="created_by"  >
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="col-md-6" hidden>
+                  <div class="matt-group">
+                     <mat-form-field appearance="legacy">
+                        <input matInput placeholder="" formControlName="created_ip"  >
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="col-md-6" hidden>
+                  <div class="matt-group">
+                     <mat-form-field appearance="legacy">
+                        <input  matInput placeholder="" formControlName="project"  >
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+            <div class="form-row button-group-lg button-auto mt-2">
+               <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                  <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+               </div>
+            </div>
+            </form>
+
+
+            <div class="form-row" >
+               <div class="col-md-12">
+                  <table class="table table-bordered upload-tables">
+                     <thead>
+                        <tr>
+                           <th>Directorate </th>
+                           <th>Sub Module </th>
+                           <th>Section </th>
+                           <th>Sub Section </th>
+                           <th>Sub Sub Section </th>
+                           <th>Actions</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr *ngFor="let gtr of GTRList; let i = index">
+                           <td>{{gtr.directorate.name}}</td>
+                           <!-- <td>{{gtr.details[i].sub_module.name}}</td> -->
+                           <td>
+                              <div *ngFor="let sub_module of gtr.details; let a = index">
+                                 {{gtr.details[a]['sub_module'].name}}
+                                 <!-- <ul>
+                                    <li>{{gtr.details[a]['sub_module'].name}}</li>
+                                 </ul> -->
+                              </div>
+                           </td>
+                           <td>
+                              <div *ngFor="let section of gtr.details; let j = index">
+                                 <!-- <span>
+                                    <ul *ngIf="gtr.details[j]['section']!=null">
+                                       <li>{{gtr.details[j]['section'].name!=''?gtr.details[j]['section'].name:'-'}}</li>
+                                    </ul>
+                                 </span> -->
+                                 <span *ngIf="gtr.details[j]['section']!=null">
+                                    {{gtr.details[j]['section'].name!=''?gtr.details[j]['section'].name:'-'}}
+                                 </span>
+                              </div>
+                           </td>
+                           <td>
+                              <div *ngFor="let section of gtr.details; let k = index">
+                                 <!-- <span>
+                                 <ul *ngIf="gtr.details[k]['sub_section']!=null">
+                                    <li>{{gtr.details[k]['sub_section'].name!=''?gtr.details[k]['sub_section'].name:'-'}}</li>
+                                 </ul>
+                                 </span> -->
+                                 <span *ngIf="gtr.details[k]['sub_section']!=null"> 
+                                    {{gtr.details[k]['sub_section'].name!=''?gtr.details[k]['sub_section'].name:'-'}}
+                                 </span>
+                              </div>
+                           </td>
+                           <td>
+                              <div *ngFor="let section of gtr.details; let l = index">
+                                 <!-- <span>
+                                 <ul *ngIf="gtr.details[l]['sub_sub_section']!=null">
+                                    <li>{{gtr.details[l]['sub_sub_section'].name!=''?gtr.details[l]['sub_sub_section'].name:'-'}}</li>
+                                 </ul>
+                                 </span> -->
+                                 <span  *ngIf="gtr.details[l]['sub_sub_section']!=null">
+                                    {{gtr.details[l]['sub_sub_section'].name!=''?gtr.details[l]['sub_sub_section'].name:'-'}}
+                                 </span>
+                              </div>
+                           </td>
+                           <td>
+                              <div class="action-icons-group">
+                                 <ul>
+                                    <li><a href="javascript:;" class="text-danger" (click)="onDeleteGlobalTR(gtr)"><span class="material-icons">delete_outline</span></a></li>
+                                 </ul>
+                              </div>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+
+        </div>
+     </div>
+  </div>
+</div>
+
+
+<!-- Ship Modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-ship" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen cardbody-style1">
+
+   <form [formGroup]="this.editShip" autocomplete="off" (ngSubmit)="onSubmitShip()" >
+     <div class="modal-content">
+        <div class="modal-header">
+            <div class="row">
+               <div class="col-md-7">
+                  <h5 class="modal-title" id="exampleModalLabel">Ship Details</h5>
+               </div>
+               <div class="col-md-5">
+                  <div class="button-group-lg text-right">
+                     <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >Save</button>
+                     <button type="button" class="btn btn-light" #closebutton data-dismiss="modal">Close</button>
+                  </div>                  
+               </div>
+            </div>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+
+           <div class="form-row">
+
+            <div class="col-md-12">
+               <h5>
+                  <div class="matt-group float-right">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" class="btn btn-primary" (click)="onShipAdd()"><mat-icon>add</mat-icon></button>
+                 </div>
+               </h5>
+
+                  <div formArrayName="ship">
+                        <div xclass="example-box" *ngFor="let ship of ship.controls; let s=index">
+                           <ng-container [formGroupName]="s">
+                              <div class="">
+                                 <div class="row align-items-center">
+
+                                        <div class="matt-group col-md-2">
+                                          <mat-label>Name</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <input matInput type="text" formControlName="name">
+                                             </mat-form-field>
+                                        </div>
+
+                                        <div class="matt-group col-md-2">
+                                          <mat-label>Code</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <input matInput type="text" formControlName="code">
+                                             </mat-form-field>
+                                        </div>
+
+                                        <div class="matt-group col-md-2">
+                                          <mat-label>Ship Id</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <input matInput type="text" formControlName="ship_id">
+                                             </mat-form-field>
+                                        </div>
+
+                                        <div class="matt-group col-md-2">
+                                          <mat-label>Command</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <mat-select formControlName="command" placeholder="Select Command" >
+                                                   <mat-option *ngFor="let command of commands" [value]="command.id">{{command.name}}</mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                        </div>
+                                     <div class="col-md-2">
+                                        <div class="matt-group col-md-1 matt-append-button pos-relative">
+                                          <ng-container >
+                                             <button class="add-intermediate-referral" type="button"  (click)="removeShip(s)" mat-fab color="warn"><mat-icon>remove</mat-icon></button>
+                                          </ng-container>
+                                       </div>
+                                     </div>
+                                 </div>
+                              </div>
+                            </ng-container>
+                        </div>
+                  </div>
+
+            </div>
+
+           </div>
+           <div class="form-row button-group-lg button-auto mt-2">
+              <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton_ship data-dismiss="modal">Close</button>
+              </div>
+           </div>
+        </div>
+     </div>
+   </form>
+
+  </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="activity-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Activity Status</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+               <span aria-hidden="true">&times;</span>
+               </button>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editFormApproval" (ngSubmit)="onSubmitApproval()" #localform="ngForm" >
+            <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="matt-group">
+                        <div class="matt-group">
+                        <mat-label>Status <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <mat-select formControlName="approved_status" placeholder="Select Status" >
+                                 
+                                 <mat-option *ngFor="let global_statuse of global_statuses" [value]="global_statuse.id">{{global_statuse.name}}</mat-option>
+                              </mat-select>
+                           <mat-error *ngIf="Error('approved_status','required') && showError">Select Status</mat-error>
+                        </mat-form-field>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved By <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <input type="text" matInput name="" value="" formControlName="approved_by_name" readonly>
+                              <input placeholder="" type="hidden" formControlName="approved_by">
+                              <mat-error *ngIf="Error('approved_by','required')">Enter Approved By</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved On <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <input type="text" matInput name="" value="" formControlName="approved_on" readonly>
+                              <mat-error *ngIf="Error('approved_on','required')">Enter Approved On</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="matt-group">
+                        <mat-label>Remarks <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="approved_remark" [config]="editorConfig" ></angular-editor>
+                        <mat-error *ngIf="editFormApproval.get('approved_remark')?.errors?.required && showError">Enter remarks</mat-error>
+                     </div>
+                </div>
+            </div>
+            <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+                  <input placeholder="" type="hidden" formControlName="id">
+                  <input placeholder="" type="hidden" formControlName="project">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <button type="button" class="btn btn-outline-primary" #closebuttonapproval data-dismiss="modal" (click)="Approvalclose()">Close</button>
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-fullscreen cardbody-style1">
+    <!-- <form (ngSubmit)="onSubmit('add')" > -->
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">{{formNAME}}</h5>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <button type="button" class="btn btn-light" (click)="onSubmitNew()" *ngIf="!isReadonly" >{{crudName}}</button>
+                              <button type="button" class="btn btn-light"   #closebutton data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+
+                  </div>
+         </div>
+
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+
+            <div class="form-rowss">
+
+               <div class="col-md-12">
+                   <div class="matt-group project-relative">
+                       <mat-label>Select Project <b class="star">*</b> </mat-label>
+                       <mat-form-field appearance="legacy">
+                              <mat-select placeholder="Select Project"  [(ngModel)]="project_ID"  (selectionChange)="changeProject($event.value)"  [disabled]="editID!=''">
+                              <mat-option *ngFor="let project of FinalArray"  [value]="project.id">{{project.name}}</mat-option>
+                              </mat-select>
+                       </mat-form-field>
+
+                   </div>
+               </div>
+
+
+                  <div *ngIf="completeSSSMapping">
+                     <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-c4">
+                        <ngb-panel id="static-c4" title="SSS">
+                           <ng-template ngbPanelContent *ngIf="completeSSSMapping">
+                              <table class="table table-bordered upload-tables">
+                                 <tbody>
+
+                                    <ng-container *ngFor="let sss_global of completeSSSMapping">
+                                       <tr>
+                                          <td>{{sss_global['section'][0]['name']}}</td>
+                                          <td>
+                                             <b><i>{{sss_global['sub_section'][0]['name']}}</i></b><br>
+
+                                             <span>{{sss_global['sub_section'] && sss_global['sub_section'][0]['sub_section_para'] && sss_global['sub_section'][0]['sub_section_para'].length>0 && sss_global['sub_section'][0]['sub_section_para'][0]['paragraph']?sss_global['sub_section'][0]['sub_section_para'][0]['paragraph']:''}}</span>
+
+                                             <b><i>{{sss_global['sub_sub_section'][0]['name']?sss_global['sub_sub_section'][0]['name']:''}}</i></b><br>
+
+                                             <span>{{sss_global['sub_sub_section'] && sss_global['sub_sub_section'][0]['sub_sub_section_para'] && sss_global['sub_sub_section'][0]['sub_sub_section_para'].length>0 && sss_global['sub_sub_section'][0]['sub_sub_section_para'][0]['paragraph']?sss_global['sub_sub_section'][0]['sub_sub_section_para'][0]['paragraph']:''}}</span>
+                                          </td>
+                                       </tr>
+                                    </ng-container>
+
+                                 </tbody>
+                              </table>
+                              </ng-template>
+                        </ngb-panel>
+                     </ngb-accordion>                     
+                  </div>
+
+                <div>
+                  <div *ngIf="completePSR">
+                     
+                  <!-- <div *ngFor="let psr of completePSR"> -->
+                     <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                          <ngb-panel id="static-b3" title="{{completePSR['submodule']['name']}}">
+                             <ng-template ngbPanelContent>
+
+                               <div *ngFor="let section of completePSR['section'];let i=index">
+                                  <div>
+                                   <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                                      <ngb-panel id="static-b3" title="{{section.name}}">
+                                         <ng-template ngbPanelContent>
+                                            <div class="matt-group">
+
+                                               <ng-container *ngIf="section.subsections.length==0">
+                                                   <span [ngStyle]="{'margin': '10px 0px 10px 0px'}" [innerHTML]="section.paragraph"></span>
+                                                </ng-container>
+
+                                                   <ng-container *ngIf="section.subsections.length>0;">
+                                                      <ng-container *ngFor="let subsections of section.subsections; let j=index">
+                                                       
+                                                         <mat-label>&nbsp;&nbsp;&nbsp;&nbsp;<b>{{subsections.name}}</b>
+
+                                                         <b class="star">*</b></mat-label>
+                                                         <ng-container *ngIf="subsections.subsubsections.length==0">
+
+                                                            <span [ngStyle]="{'margin': '10px 0px 10px 20px'}" [innerHTML]="subsections.paragraph"></span>
+                                                         </ng-container>
+                                                         <ng-container *ngIf="subsections.subsubsections.length>0;">
+                                                            <ng-container *ngFor="let subsubsections of subsections.subsubsections; let j=index"> 
+                                                            <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>{{subsubsections.name}}</u></i>
+                                                               
+                                                               <b class="star">*</b></mat-label>
+                                                             <span [ngStyle]="{'margin': '10px 0px 10px 25px'}" [innerHTML]="subsubsections.paragraph"></span>
+
+                                                         </ng-container>
+                                                         </ng-container>
+                                                      </ng-container>
+                                                   </ng-container>
+                                          </div>
+                                         </ng-template>
+                                      </ngb-panel>
+                                    </ngb-accordion>
+                                 </div>               
+                               </div>
+
+
+
+                            </ng-template>
+                         </ngb-panel>
+                     </ngb-accordion>
+                  <!-- </div> -->
+                  </div>
+               <div>
+               
+               <!-- <pre>{{ this.forms | json }}</pre> -->
+
+               <!-- <div class="col-md-12" *ngFor="let psr of global_psr">
+
+                   <div class="col-md-12">
+                    <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                       <ngb-panel id="static-b3" title="{{psr.name}}">
+                          <ng-template ngbPanelContent> -->
+                        <div *ngIf="forms">
+                        <div class="col-md-12" *ngFor="let form of forms; let a=index">
+                           <input type="hidden" [(ngModel)]="form.submodule.id" name="sub_module_{{a}}">
+                            <div class="" *ngFor="let section of form.section; let i=index">
+                               <div class="">
+                                <ngb-accordion class="acq-section" [closeOthers]="false" xactiveIds="static-b3">
+                                   <ngb-panel id="static-b3" title="{{section.name}}" >
+                                      <ng-template ngbPanelContent>
+
+                                         <div class="matt-group">
+                                           <ng-container *ngIf="section.subsections.length==0">
+                                               
+                                               <div class="form-row">
+                                                <div class="col-md-9"></div> 
+                                               <div class="col-md-2">
+                                                <div class="form-group form-check">
+                                                      <input type="checkbox" class="form-check-input " id="{{section.name}}{{i}}" [(ngModel)]="section.view">
+                                                      <label class="form-check-label" for="{{section.name}}{{i}}" >View</label>
+                                                </div>
+                                                </div>
+                                              </div>
+                                              <div class="form-row">
+                                                   <div class="col-md-12">
+                                                      <span>
+                                                         <label class="form-label"><b>Para no</b></label>
+                                                         <mat-form-field appearance="legacy">
+                                                            <input matInput type="text" [(ngModel)]="section.para_no">
+                                                         </mat-form-field>
+                                                      </span>
+                                                   </div>
+                                                </div>
+                                             
+                                          <span *ngIf="section.field_type.data_type==1">
+                                                   <angular-editor [(ngModel)]="section.paragraph"  [config]="editorConfig" ></angular-editor>                   
+                                                </span>
+
+                                                <span *ngIf="section.field_type.data_type==2">
+                                                   <mat-form-field appearance="legacy">
+                                                      <input matInput [matDatepicker]="picker1" [(ngModel)]="section.paragraph">
+                                                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                                      <mat-datepicker #picker1></mat-datepicker>
+                                                   </mat-form-field>
+                                                </span>
+
+                                                <span *ngIf="section.field_type.data_type==3">
+                                                   <mat-form-field appearance="legacy">
+                                                      <input matInput type="number" [(ngModel)]="section.paragraph" min="0" oninput="validity.valid||(value='');">
+                                                   </mat-form-field>
+                                                </span>
+                                                
+                                                <span *ngIf="section.field_type.data_type==4">
+                                                   <!-- {{section.field_type.default_values}}
+                                                   {{section.field_type.default_values.split('|')}} -->
+                                                   <mat-form-field appearance="fill">
+                                                      <mat-select placeholder="Select list" [(ngModel)]="section.paragraph">
+                                                         <mat-option *ngFor="let drop_list of section.field_type.default_values.split('|')" [value]="drop_list">{{drop_list}}</mat-option>
+                                                      </mat-select>
+                                                   </mat-form-field>
+                                                </span>
+
+                                                <span>
+                                                   <ng-template [ngIf]="section.system_value.length>0" [ngIfElse]="sectionSystemElse">
+                                                      <span>
+                                                         <app-system (parentFunction)="parentFunction($event)" [fromParent]="section.system" [fromParentValue]="section.system_value" [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                      </span>
+                                                   </ng-template>
+
+                                                   <ng-template #sectionSystemElse>
+                                                      <span *ngIf="section.system.length>0">
+                                                         <app-system (parentFunction)="parentFunction($event)" [fromParent]="section.system" [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                      </span>
+                                                   </ng-template>
+                                                </span>
+
+                                                <span *ngIf="section.equipment.length>0">
+                                                   <ng-template [ngIf]="section.equipment_value.length>0" [ngIfElse]="sectionEquipmentElse">
+                                                      <span>
+                                                         <app-system (parentFunction)="parentFunction($event)" [fromParent]="section.equipment" [fromParentValue]="section.equipment_value" [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                      </span>
+                                                   </ng-template>
+
+                                                   <ng-template #sectionEquipmentElse>
+                                                      <span *ngIf="section.equipment.length>0">
+                                                         <app-system (parentFunction)="parentFunction($event)" [fromParent]="section.equipment" [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                      </span>
+                                                   </ng-template>
+                                                </span>
+
+                                                <span>
+                                                   <ng-template [ngIf]="section.compartment_value.length>0" [ngIfElse]="sectionCompartmentElse">
+                                                      <span>
+                                                         <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="section.compartment" [fromParentValue]="section.compartment_value" [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                      </span>
+                                                   </ng-template>
+
+                                                   <ng-template #sectionCompartmentElse>
+                                                      <span *ngIf="section.compartment.length>0">
+                                                         <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="section.compartment" [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                      </span>
+                                                   </ng-template>                                                   
+                                                </span>
+
+
+                                                <div class="row d-flex justify-content-center mb-2 mt-2 acq-comments">
+                                                   <div class="col-md-12 col-lg-12">
+
+                                                     <div class="card text-dark">
+                                                      <div class="card-header">
+                                                         <div class="row">
+                                                            <div class="col-md-10">
+                                                               <h4 class="text-white" >{{section.name}} comments</h4 >
+                                                            </div>
+                                                            <div class="col-md-2 text-align-right">
+                                                               <a href="#" data-toggle="modal" data-target="#comments-modal" (click)="onComments(form.project, form.module.id, form.submodule.id, section.id, '', '')"  class="text-white"><span class="material-icons-outlined" *ngIf="((section.directorate!=null &&  api.userid.designation &&  api.userid.designation[0].code==section.directorate.directorate_id__code) || (api.userid.role_code=='admin'))">add</span></a>
+                                                               <span>
+                                                               <!-- {{section.directorate|json}} -->
+                                                               <!-- {{'Module :'+form.module.id+','}}
+                                                               {{'Sub Module :'+form.submodule.id+','}}
+                                                               {{'Section Id :'+section.id+','}} -->
+                                                               </span>
+                                                            </div>
+                                                         </div>
+                                                         
+                                                      </div>
+
+
+                                                      <div class="card-body p-4" *ngIf="section.comments.length==0;">
+                                                         <div class="alert alert-danger text-center p-2" role="alert" >No comments were found</div>
+                                                      </div>
+
+                                                      <div *ngIf="section.comments.length>0;">
+                                                         <!-- {{section.comments|json}} -->
+
+                                                         <div *ngFor="let comment of section.comments">
+                                                             <div class="card-body p-4">
+                                                               <div class="d-flex flex-start">
+                                                                 <img class="rounded-circle shadow-1-strong me-3"
+                                                                   src="assets/images/captain.png" alt="avatar" width="60"
+                                                                   height="60" />
+                                                                 <div>
+                                                                   <h6 class="fw-bold mb-1">{{comment.created_by__first_name}} {{comment.created_by__last_name}}</h6>
+                                                                   <div class="d-flex align-items-center mb-3">
+                                                                     <p class="mb-0">
+                                                                       {{comment.created_on | date:'longDate'}}
+                                                                       <!-- <span class="badge bg-primary">Pending</span> -->
+                                                                     </p>
+
+
+                                                                     <span *ngIf="((section.directorate!=null &&  api.userid.designation &&  api.userid.designation[0].code==section.directorate.directorate_id__code &&  api.userid.user_id==comment.created_by__id) || (api.userid.role_code=='admin'))">
+                                                                     <a href="javascript:void(0)" class="link-muted"><span class="material-icons-outlined" data-target="#comments-modal" (click)="editCommentsOption(comment)">edit</span></a>
+                                                                     <a href="javascript:void(0)" class="link-danger">
+                                                                        <span class="material-icons-outlined" (click)="onDeleteComments(comment.id)">delete</span></a>
+                                                                     </span>
+                                                                   </div>
+                                                                   <p class="mb-0" [innerHTML]="comment.comments"></p>
+                                                                 </div>
+                                                               </div>
+                                                             </div>
+
+                                                             <hr class="my-0" />
+                                                         </div>
+                                                      </div>
+                                                     </div>
+                                                   </div>
+                                                </div>
+
+                                             </ng-container>
+
+
+                                            </div>
+                                             <ng-container *ngIf="section.subsections.length>0;">
+                                                   <ng-container *ngFor="let subsections of section.subsections; let j=index">
+                                                      <ngb-accordion class="acq-subsection" [closeOthers]="false" activeIds="static-b3">
+                                   <ngb-panel id="static-b3" title="{{subsections.name}}" >
+                                      <ng-template ngbPanelContent>
+                                               <ng-container *ngIf="subsections.subsubsections.length==0">
+
+                                               <div class="form-row">
+                                                <div class="col-md-9"></div> 
+                                                            &nbsp; &nbsp;&nbsp; 
+                                                            <div class="col-md-2">
+                                                               <div class="form-group form-check">
+                    
+                                                              <input type="checkbox" class="form-check-input " id="{{subsections.name}}{{j}}" [(ngModel)]="subsections.view" >
+                                                              <label class="form-check-label" for="{{subsections.name}}{{j}}" >View</label>
+                                                          
+                                                        </div>
+                                                        </div>
+                                                     </div>
+                                                     </ng-container>
+                                                     <ng-container *ngIf="subsections.subsubsections.length==0">
+                                                      <div class="form-row">
+                                                         <div class="col-md-12">
+                                                            <span>
+                                                               <label class="form-label"><b>Para no</b></label>
+                                                               <mat-form-field appearance="legacy">
+                                                                  <input matInput type="text" [(ngModel)]="subsections.para_no">
+                                                               </mat-form-field>
+                                                            </span>
+                                                         </div>
+                                                      </div>
+                                                      
+                                                         <span *ngIf="subsections.field_type.data_type==1">
+                                                            <angular-editor [(ngModel)]="subsections.paragraph"   [config]="editorConfig" (keyup)="checkValue()"></angular-editor>
+                                                         </span>
+
+                                                         <span *ngIf="subsections.field_type.data_type==2">
+                                                            <mat-form-field appearance="legacy">
+                                                               <input matInput [matDatepicker]="picker2" [(ngModel)]="subsections.paragraph">
+                                                               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                                               <mat-datepicker #picker2></mat-datepicker>
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span *ngIf="subsections.field_type.data_type==3">
+                                                            <mat-form-field appearance="legacy">
+                                                               <input matInput type="number" [(ngModel)]="subsections.paragraph" min="0" oninput="validity.valid||(value='');">
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span *ngIf="subsections.field_type.data_type==4">
+                                                            <!-- {{subsections.field_type.default_values}}
+                                                            {{subsections.field_type.default_values.split('|')}} -->
+                                                            <mat-form-field appearance="fill">
+                                                               <mat-select placeholder="Select list" [(ngModel)]="subsections.paragraph">
+                                                                  <mat-option *ngFor="let drop_list of subsections.field_type.default_values.split('|')" [value]="drop_list">{{drop_list}}</mat-option>
+                                                               </mat-select>
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsections.system_value.length>0" [ngIfElse]="subSectionSystemElse">
+                                                               <span>
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsections.system" [fromParentValue]="subsections.system_value" [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSectionSystemElse>
+                                                               <span *ngIf="subsections.system.length>0">
+                                                                  <!-- {{this.forms[0].project|json}} -->
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsections.system" [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                               </span>
+                                                            </ng-template>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsections.equipment_value.length>0" [ngIfElse]="subSectionEquipmentElse">
+                                                               <span>
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsections.equipment" [fromParentValue]="subsections.equipment_value" [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSectionEquipmentElse>
+                                                               <span *ngIf="subsections.equipment.length>0">
+                                                                  <!-- {{this.forms[0].project|json}} -->
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsections.equipment" [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                               </span>
+                                                            </ng-template>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsections.compartment_value.length>0" [ngIfElse]="subSectionCompartmentElse">
+                                                               <span>
+                                                                  <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="subsections.compartment" [fromParentValue]="subsections.compartment_value" [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSectionCompartmentElse>
+                                                               <span *ngIf="subsections.compartment.length>0">
+                                                                  <!-- {{this.forms[0].project|json}} -->
+                                                                  <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="subsections.compartment" [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                               </span>
+                                                            </ng-template>
+                                                         </span>
+
+                                                         <div class="row d-flex justify-content-center mb-2 mt-2 acq-comments">
+                                                            <div class="col-md-12 col-lg-12">
+
+                                                              <div class="card text-dark">
+                                                               <div class="card-header">
+                                                                  <div class="row">
+                                                                     <div class="col-md-10">
+                                                                        <h4 class="text-white" >{{subsections.name}} comments</h4 >
+                                                                     </div>
+                                                                     <div class="col-md-2 text-align-right">
+                                                                        <a href="#" data-toggle="modal" data-target="#comments-modal" (click)="onComments(form.project, form.module.id, form.submodule.id, section.id, subsections.id ,'')"  class="text-white"><span class="material-icons-outlined" *ngIf="((subsections.directorate!=null &&  api.userid.designation && api.userid.designation[0].code==subsections.directorate.directorate_id__code) || (api.userid.role_code=='admin'))">add</span></a>
+                                                                        <!-- <span>
+                                                                        {{'Module :'+form.module.id+','}}
+                                                                        {{'Sub Module :'+form.submodule.id+','}}
+                                                                        {{'Section Id :'+section.id+','}}
+                                                                        {{'Sub Section Id :'+subsections.id+','}}
+                                                                        </span> -->
+                                                                        <!-- {{subsections.directorate|json}} -->
+                                                                     </div>
+                                                                  </div>
+                                                                  
+                                                               </div>
+
+                                                               <div class="card-body p-4" *ngIf="subsections.comments.length==0;">
+                                                                  <div class="alert alert-danger text-center p-2" role="alert" >No comments were found</div>
+                                                               </div>
+
+                                                               <div *ngIf="subsections.comments.length>0;">
+                                                                  <div *ngFor="let sub_comment of subsections.comments">
+                                                                      <div class="card-body p-4">
+                                                                        <div class="d-flex flex-start">
+                                                                          <img class="rounded-circle shadow-1-strong me-3"
+                                                                            src="assets/images/captain.png" alt="avatar" width="60"
+                                                                            height="60" />
+                                                                          <div>
+                                                                            <h6 class="fw-bold mb-1">{{sub_comment.created_by__first_name}} {{sub_comment.created_by__last_name}}</h6>
+                                                                            <div class="d-flex align-items-center mb-3">
+                                                                              <p class="mb-0">
+                                                                                {{sub_comment.created_on | date:'longDate'}}
+                                                                                <!-- <span class="badge bg-primary">Pending</span> -->
+                                                                              </p>
+
+                                                                              <span *ngIf="((subsections.directorate!=null && api.userid.designation && api.userid.designation[0].code==subsections.directorate.directorate_id__code && api.userid.user_id==sub_comment.created_by__id) || (api.userid.role_code=='admin'))">
+                                                                              <a href="javascript:void(0)" class="link-muted"><span class="material-icons-outlined" data-target="#comments-modal" (click)="editCommentsOption(sub_comment)">edit</span></a>
+                                                                              <a href="javascript:void(0)" class="link-danger"><span class="material-icons-outlined" (click)="onDeleteComments(sub_comment.id)">delete</span></a>
+                                                                              </span>
+                                                                            </div>
+                                                                            
+                                                                            <p class="mb-0" [innerHTML]="sub_comment.comments"></p>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+
+                                                                      <hr class="my-0" />
+                                                                  </div>
+                                                             </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                      </ng-container>
+                                                       
+
+                                            <div class="matt-group">
+                                            </div>
+                                                 <ng-container *ngIf="subsections.subsubsections.length>0;">
+                                                   <ng-container *ngFor="let subsubsections of subsections.subsubsections; let j=index; let jj=index">
+                                                      <ngb-accordion class="acq-subsubsection"  [closeOthers]="false" activeIds="static-b3">
+                                   <ngb-panel id="static-b3" title="{{subsubsections.name}}" >
+                                      <ng-template ngbPanelContent>
+                                        
+                                                            <div class="form-row">
+                                                <div class="col-md-9"></div> 
+                                               <div class="col-md-2">
+                                                             <div class="form-group form-check">
+                                                               <input type="checkbox" class="form-check-input " id="{{subsubsections.name}}{{j}}" [(ngModel)]="subsubsections.view">
+                                                               <label class="form-check-label" for="{{subsubsections.name}}{{j}}" >View</label>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                       
+                                                         <!-- {{subsubsections.field_type|json}} -->
+                                                         <div class="form-row">
+                                                            <div class="col-md-12">
+                                                               <span>
+                                                                  <label class="form-label"><b>Para no</b></label>
+                                                                  <mat-form-field appearance="legacy">
+                                                                     <input matInput type="text" [(ngModel)]="subsubsections.para_no">
+                                                                  </mat-form-field>
+                                                               </span>
+                                                            </div>
+                                                         </div>
+                                                         
+                                                         <span *ngIf="subsubsections.field_type.data_type==1">
+                                                          <angular-editor  [(ngModel)]="subsubsections.paragraph"  [config]="editorConfig" (keyup)="checkValue()"></angular-editor>
+                                                         </span>
+
+                                                         <span *ngIf="subsubsections.field_type.data_type==2">
+                                                            <mat-form-field appearance="legacy">
+                                                               <input matInput [matDatepicker]="picker3" [(ngModel)]="subsubsections.paragraph">
+                                                               <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                                               <mat-datepicker #picker3></mat-datepicker>
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span *ngIf="subsubsections.field_type.data_type==3">
+                                                            <mat-form-field appearance="legacy">
+                                                               <input matInput type="number" [(ngModel)]="subsubsections.paragraph" min="0" oninput="validity.valid||(value='');">
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span *ngIf="subsubsections.field_type.data_type==4">
+                                                            <!-- {{subsubsections.field_type.default_values}} -->
+                                                            <mat-form-field appearance="fill">
+                                                               <mat-select placeholder="Select list" [(ngModel)]="subsubsections.paragraph">
+                                                                  <mat-option *ngFor="let drop_list of subsubsections.field_type.default_values.split('|')" [value]="drop_list">{{drop_list}}</mat-option>
+                                                               </mat-select>
+                                                            </mat-form-field>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsubsections.system_value.length>0" [ngIfElse]="subSubSectionSystemElse">
+                                                               <span>
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.system" [fromParentValue]="subsubsections.system_value"  [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSubSectionSystemElse>
+                                                               <span *ngIf="subsubsections.system.length>0">
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.system" [fromParentValue]="subsubsections.system_value"  [fromParentProjectId]="this.forms[0].project" [pType]="1"></app-system>
+                                                               </span>
+                                                            </ng-template>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsubsections.equipment_value.length>0" [ngIfElse]="subSubSectionEquipmentElse">
+                                                               <span>
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.equipment" [fromParentValue]="subsubsections.equipment_value"  [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSubSectionEquipmentElse>
+                                                               <span *ngIf="subsubsections.equipment.length>0">
+                                                                  <app-system (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.equipment" [fromParentProjectId]="this.forms[0].project" [pType]="2"></app-system>
+                                                               </span>
+                                                            </ng-template>
+                                                         </span>
+
+                                                         <span>
+                                                            <ng-template [ngIf]="subsubsections.compartment_value.length>0" [ngIfElse]="subSubSectionCompartmentElse">
+                                                               <span>
+                                                                  <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.compartment" [fromParentValue]="subsubsections.compartment_value"  [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                               </span>
+                                                            </ng-template>
+
+                                                            <ng-template #subSubSectionCompartmentElse>
+                                                               <span *ngIf="subsubsections.compartment.length>0">
+                                                                  <app-compartment (parentFunction)="parentFunction($event)" [fromParent]="subsubsections.compartment" [fromParentProjectId]="this.forms[0].project" [pType]="3"></app-compartment>
+                                                               </span>
+                                                            </ng-template>
+
+                                                         </span>
+
+                                                         <div class="row d-flex justify-content-center mb-2 mt-2 acq-comments">
+                                                            <div class="col-md-12 col-lg-12">
+
+                                                              <div class="card text-dark">
+                                                               <div class="card-header">
+                                                                  <div class="row">
+                                                                     <div class="col-md-10">
+                                                                        <h4 class="text-white" >{{subsubsections.name}} comments</h4 >
+                                                                     </div>
+                                                                     <div class="col-md-2 text-align-right">
+                                                                        <a href="#" data-toggle="modal" data-target="#comments-modal" (click)="onComments(form.project, form.module.id, form.submodule.id, section.id, subsections.id , subsubsections.id)"  class="text-white"><span class="material-icons-outlined"  *ngIf="((subsubsections.directorate!=null && api.userid.designation && api.userid.designation[0].code==subsubsections.directorate.directorate_id__code) || (api.userid.role_code=='admin'))">add</span></a>
+                                                                        <!-- <span>
+                                                                        {{'Module :'+form.module.id+','}}
+                                                                        {{'Sub Module :'+form.submodule.id+','}}
+                                                                        {{'Section Id :'+section.id+','}}
+                                                                        {{'Sub Section Id :'+subsections.id+','}}
+                                                                        {{'Sub Sub Section Id :'+subsubsections.id+','}}
+                                                                        </span> -->
+                                                                        <!-- {{subsubsections.directorate|json}} -->
+                                                                     </div>
+                                                                  </div>
+                                                                  
+                                                               </div>
+
+                                                               <div class="card-body p-4" *ngIf="subsubsections.comments.length==0;">
+                                                                  <div class="alert alert-danger text-center p-2" role="alert" >No comments were found</div>
+                                                               </div>
+
+                                                               <div *ngIf="subsubsections.comments.length>0;">
+                                                                  <div *ngFor="let sub_sub_comment of subsubsections.comments">
+                                                                      <div class="card-body p-4">
+                                                                        <div class="d-flex flex-start">
+                                                                          <img class="rounded-circle shadow-1-strong me-3"
+                                                                            src="assets/images/captain.png" alt="avatar" width="60"
+                                                                            height="60" />
+                                                                          <div>
+                                                                            <h6 class="fw-bold mb-1">{{sub_sub_comment.created_by__first_name}} {{sub_sub_comment.created_by__last_name}}</h6>
+                                                                            <div class="d-flex align-items-center mb-3">
+                                                                              <p class="mb-0">
+                                                                                {{sub_sub_comment.created_on | date:'longDate'}}
+
+                                                                                <!-- {{api.userid.user_id+'--'+sub_sub_comment.created_by__id}} -->
+                                                                                <!-- <span class="badge bg-primary">Pending</span> -->
+                                                                              </p>
+                                                                              <span *ngIf="((subsubsections.directorate!=null && api.userid.designation && api.userid.designation[0].code==subsubsections.directorate.directorate_id__code && api.userid.user_id==sub_sub_comment.created_by__id) || (api.userid.role_code=='admin'))">
+                                                                              <a href="javascript:void(0)" class="link-muted"><span class="material-icons-outlined" data-target="#comments-modal" (click)="editCommentsOption(sub_sub_comment)">edit</span></a>
+                                                                              <a href="javascript:void(0)" class="link-danger"><span class="material-icons-outlined" (click)="onDeleteComments(sub_sub_comment.id)">delete</span></a>
+                                                                              </span>
+                                                                            </div>
+
+                                                                            <p class="mb-0" [innerHTML]="sub_sub_comment.comments"></p>
+                                                                          </div>
+                                                                        </div>
+                                                                      </div>
+
+                                                                      <hr class="my-0" />
+                                                                  </div>
+                                                               </div>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+
+
+
+
+
+                                   <div class="matt-group">
+                                   </div>
+                                </ng-template>
+                                </ngb-panel>
+                             </ngb-accordion>
+                          </ng-container>
+                       </ng-container>
+                                           
+                                      </ng-template>
+                                   </ngb-panel>
+                                </ngb-accordion>
+                             </ng-container>
+                          </ng-container>
+                                      </ng-template>
+                                   </ngb-panel>
+                                 </ngb-accordion>
+                              </div>               
+                            </div>
+                        </div>
+                     </div>
+                         <!-- </ng-template>
+                      </ngb-panel>
+                   </ngb-accordion>
+                </div>
+
+
+               </div> -->
+            </div>
+
+         </div>
+      </div>
+   <!-- </form> -->
+   </div>
+</div>
+
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="comments-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Comments</h5>
+            <button type="button" class="close" data-dismiss="modal1" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip" (click)="Commentclose()">
+               <span aria-hidden="true">&times;</span>
+               </button>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editFormComments" (ngSubmit)="onSubmitComments()" >
+            <div class="form-row">
+                <div class="col-md-12">
+                  <div class="matt-group">
+                        <mat-label>Comments <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="comments" [config]="editorConfig" ></angular-editor>
+                     </div>
+                </div>
+            </div>
+            <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+                  <input placeholder="" type="hidden" formControlName="id">
+                  <input placeholder="" type="hidden" formControlName="project_id">
+                  <input placeholder="" type="hidden" formControlName="module_id">
+                  <input placeholder="" type="hidden" formControlName="sub_module_id">
+                  <input placeholder="" type="hidden" formControlName="section_id">
+                  <input placeholder="" type="hidden" formControlName="sub_section_id">
+                  <input placeholder="" type="hidden" formControlName="sub_sub_section_id">
+                  <button type="submit" class="btn btn-primary">Save</button>
+                  <button type="button" class="btn btn-outline-primary" #closebuttoncomments data-dismiss="modal1" (click)="Commentclose()">Close</button> 
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+

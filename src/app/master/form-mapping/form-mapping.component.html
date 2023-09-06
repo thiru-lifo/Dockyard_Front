@@ -1,0 +1,415 @@
+<section class="body-card user-master-page">
+  <div class="container-fluid">
+     <div class="row">
+        <div class="col-md-12">
+           <div class="card">
+              <div class="card-header">
+                 <div class="row">
+                    <div class="col-md-6">
+                       <h3>Form Mapping</h3>
+                    </div>
+                    <div class="col-md-6">
+                       <div class="text-right">
+                          <a href="#" data-toggle="modal" data-target="#crud-countries" (click)="create()" class="btn btn-primary btn-round-sm" *ngIf="permission.add==true"  >Create</a>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="table-responsive">
+              <div class="container table-options">
+                 <div class="row">
+                    <div class="col-md-6">
+                       <mat-paginator [length]="100" [pageSize]="10"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                       </mat-paginator>
+                    </div>
+                    <div class="col-md-6">
+                       <mat-form-field appearance="standard">
+                           <mat-label>Search your text here</mat-label>
+                           <input matInput (keyup)="applyFilter($event)" class="search-mat-table" #input >
+                       </mat-form-field>
+                    </div>
+                 </div>
+              </div>
+              <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                <ng-container matColumnDef="Formname">
+                    <th mat-header-cell *matHeaderCellDef><b> Form Name </b></th>
+                    <td mat-cell *matCellDef="let user">{{user.name}}</td>
+                 </ng-container>
+
+                  <ng-container matColumnDef="hierarchy" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>Hierarchy</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let user">
+                        <a href="#" data-toggle="modal" data-target="#crud-hierarchy" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="hierarchy(user)" title="Hierarchy"><span class="material-icons-outlined">lan</span></a>
+                     </td>
+                  </ng-container>
+                 
+                  <ng-container matColumnDef="status">
+                     <th mat-header-cell *matHeaderCellDef><b> Status </b></th>
+                     <td mat-cell *matCellDef="let user"> <a href="javascript:void(0)" class="status-field {{user.status=='1'?'text-success':'text-danger'}}" >
+                     {{user.status=='1'?'Active':'Inactive'}}</a>  </td>
+                  </ng-container>
+                  <ng-container matColumnDef="view" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let user">
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(user)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="edit" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let user">
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" (click)="editOption(user.id)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="delete">
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let user"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(user.id)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                  </ng-container>
+                 <ng-container matColumnDef="noData">
+                    <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length" class="norecord">
+                        No Records Found!
+                    </th >
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                 </tr>
+              </table>
+           </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen cardbody-style1">
+
+   <form [formGroup]="this.editForm" autocomplete="off" (ngSubmit)="onSubmit()" >
+     <div class="modal-content">
+        <div class="modal-header">
+            <div class="row">
+               <div class="col-md-7">
+                  <h5 class="modal-title" id="exampleModalLabel">Form mapping</h5>
+               </div>
+               <div class="col-md-5">
+                  <div class="button-group-lg text-right">
+                     <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >Save</button>
+                     <button type="button" class="btn btn-light"  #closebutton data-dismiss="modal">Close</button>
+                  </div>                  
+               </div>
+            </div>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+
+           <div class="form-row">
+              <div class="col-md-4">
+                  <div class="matt-group ">
+                      <mat-label>Form<b class="star">*</b></mat-label>
+                       <mat-form-field appearance="legacy" >
+                          <mat-select formControlName="form" placeholder="Select Form" >
+                              <mat-option *ngFor="let form of forms_map"  [value]="form.id">{{form.name}}</mat-option>
+                           </mat-select>
+                           <mat-error *ngIf="Error('form','required')"></mat-error>
+                        </mat-form-field>
+                   </div>
+              </div>
+             
+              <div class="col-md-2">
+                  <div class="matt-group">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" class="btn btn-primary" (click)="onRoleAdd()"  ><mat-icon>add</mat-icon></button>
+                 </div>
+              </div>
+              <div class="col-md-4">&nbsp;</div>
+              
+              <div class="col-md-12">
+               <div id="todo" cdkDropList xclass="example-list" (cdkDropListDropped)="drop($event)">
+               <!-- <div xid="todo" xcdkDropList xclass="example-list"> -->
+               <div formArrayName="formmapping" >
+                     <div class="example-box" *ngFor="let formmapping of formmapping.controls; let i=index" cdkDrag>
+                        <ng-container [formGroupName]="i">
+                           <div class="form-row">
+                                    <div class="form-row" >
+                                       <!-- <div class="matt-group col-md-1">
+                                           <mat-label>Order</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                                <input matInput formControlName="order">
+                                             </mat-form-field>
+                                        </div> -->
+                                       <div class="matt-group col-md-1">
+                                           <mat-label>Class</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <mat-select formControlName="Class" placeholder="Select Class" >
+                                                   <mat-option *ngFor="let class of classes"  [value]="class.id">{{class.name}}</mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                        </div>
+                                       <div class="matt-group col-md-2">
+                                           <mat-label>Module</mat-label>
+                                            <mat-form-field appearance="fill" >
+                                               <mat-select formControlName="module" placeholder="Select Module" >
+                                                   <mat-option *ngFor="let modules of module"  [value]="modules.id">{{modules.name}}</mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                        </div>
+                                        
+                                        <div class="matt-group col-md-2">
+                                          <mat-label>Submodule</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="sub_module" placeholder="Select Submodule"  >
+                                            <ng-container *ngFor="let submodules of submodule">
+                                              <!-- <mat-option   [value]="submodules.id"*ngIf="formmapping.value.module!='' && (submodules.module.id==formmapping.value.module) "   
+
+                                              >{{submodules.name}}</mat-option> -->
+
+
+                                             <mat-option   [value]="submodules.id">
+
+                                              {{submodules.name}}</mat-option>
+
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div>
+                                       <div class="matt-group col-md-2">
+                                          <mat-label>Section</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="section" placeholder="Select Section"  >
+                                            <ng-container *ngFor="let sections of section">
+                                              <mat-option   [value]="sections.id" *ngIf="formmapping.value.module!='' && formmapping.value.sub_module!='' && (sections.module_id==formmapping.value.module) && (sections.sub_module_id==formmapping.value.sub_module)"
+
+                                              >{{sections.name}}</mat-option>
+
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div>
+                                       <div class="matt-group col-md-2">
+                                          <mat-label>SubSection</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="sub_section" placeholder="Select Subsection"  >
+                                            <ng-container *ngFor="let subsections of subsection">
+                                              <mat-option   [value]="subsections.id"*ngIf="formmapping.value.module!='' && formmapping.value.sub_module!='' && formmapping.value.section!='' && (subsections.module_id==formmapping.value.module) && (subsections.sub_module_id==formmapping.value.sub_module)&& (subsections.global_section_id==formmapping.value.section)"
+
+                                              >{{subsections.name}}</mat-option>
+
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div>
+                                             
+                                       <div class="matt-group col-md-2">
+                                          <mat-label>SubSubSection</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="sub_sub_section" placeholder="Select Subsubsection"  >
+                                            <ng-container *ngFor="let subsubsections of subsubsection">
+                                              <mat-option   [value]="subsubsections.id"*ngIf="formmapping.value.module!='' && formmapping.value.sub_module!='' && formmapping.value.section!=''&& formmapping.value.sub_section!='' && (subsubsections.module_id==formmapping.value.module) && (subsubsections.sub_module_id==formmapping.value.sub_module)&& (subsubsections.global_section_id==formmapping.value.section)&& (subsubsections.global_sub_section_id==formmapping.value.sub_section)" 
+
+                                              >{{subsubsections.name}}</mat-option>
+
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div>
+                                       <!-- <div class="matt-group col-md-3">
+                                          <mat-label>City</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="city_id" placeholder="Select City"  >
+                                            <ng-container *ngFor="let city of cities">
+                                              <mat-option   [value]="city.id" *ngIf="hospital.value.country_id!='' && hospital.value.state_id && (city.state.country==hospital.value.country_id) && (city.state.id==hospital.value.state_id)">{{city.name}}</mat-option>
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div>
+                                       <div class="matt-group col-md-3">
+                                          <mat-label>Hospital</mat-label>
+                                          <mat-form-field appearance="fill" >
+                                          <mat-select formControlName="hospital" placeholder="Select hospital" >
+                                            <ng-container *ngFor="let hosp of hospitals">
+                                              <mat-option [value]="hosp.id" *ngIf="hospital.value.country_id!='' && hospital.value.state_id!='' && hospital.value.city_id!='' && (hosp.country.id==hospital.value.country_id)  && (hosp.state.id==hospital.value.state_id) && (hosp.city.id==hospital.value.city_id)">{{hosp.name}}</mat-option>
+                                            </ng-container>
+                                          </mat-select>
+                                         </mat-form-field>
+                                       </div> -->
+                                       
+                            
+                            
+                         
+                              
+                              <div class="matt-group col-md-1 matt-append-button pos-relative">
+                                 <ng-container >
+                                 <button class="add-intermediate-referral" type="button"  (click)="removeformmapping(i)" mat-fab color="warn"><mat-icon>remove</mat-icon></button>
+                              </ng-container>
+                              </div>
+
+                           </div>
+                           </div>
+                  </ng-container>
+               </div>
+               
+               </div>
+               </div>
+           </div>
+              <!-- <div class="col-md-12">
+                 <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input " id="exampleCheck1" formControlName="status" >
+                    <label class="form-check-label" for="exampleCheck1" >Active</label>
+                 </div>
+              </div> -->
+           </div>
+           <div class="form-row button-group-lg button-auto mt-2">
+              <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Close</button>
+              </div>
+           </div>
+        </div>
+     </div>
+   </form>
+
+  </div>
+</div>
+
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-hierarchy" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen cardbody-style1">
+
+   <form [formGroup]="this.editHierarchy" autocomplete="off" (ngSubmit)="onSubmitHierarchy()" >
+     <div class="modal-content">
+        <div class="modal-header">
+            <div class="row">
+               <div class="col-md-7">
+                  <h5 class="modal-title" id="exampleModalLabel">Hierarchy - Form Level</h5>
+               </div>
+               <div class="col-md-5">
+                  <div class="button-group-lg text-right">
+                     <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >Save</button>
+                     <button type="button" class="btn btn-light" #closebutton data-dismiss="modal">Close</button>
+                  </div>                  
+               </div>
+            </div>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+
+           <div class="form-row">
+              <div class="col-md-4">
+                  <div class="matt-group">
+                      <mat-label>Form <b class="star">*</b></mat-label>
+                       <mat-form-field appearance="legacy" >
+                          <mat-select formControlName="form_hierarchy" placeholder="Select Forms" >
+                              <mat-option *ngFor="let form of forms" [value]="form.id" disabled>{{form.name}}</mat-option>
+                           </mat-select>
+                           <!-- <mat-error *ngIf="ErrorHierarchy('form_hierarchy','required')"></mat-error> -->
+                        </mat-form-field>
+                   </div>
+              </div>
+
+              <!-- <div class="col-md-2">
+                  <div class="matt-group">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" class="btn btn-primary" (click)="onRecommenderAdd()"><mat-icon>add</mat-icon></button>
+                 </div>
+              </div> -->
+              <div class="col-md-4">&nbsp;</div>
+
+            <div class="col-md-6">
+               <h5>Recommender
+                  <div class="matt-group float-right">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" class="btn btn-primary" (click)="onRecommenderAdd()"><mat-icon>add</mat-icon></button>
+                 </div>
+               </h5>
+               <div id="todo" cdkDropList class="example-list" (cdkDropListDropped)="dropRecommender($event)">
+                  <div formArrayName="recommender">
+                        <div class="example-box" *ngFor="let recommender of recommender.controls; let j=index" cdkDrag>
+                           <ng-container [formGroupName]="j">
+                              <div class="">
+                                 <div class="row align-items-center">
+                                     <div class="col-md-3">
+                                        <div class="matt-group">
+                                            <mat-form-field appearance="fill" >
+                                               <mat-select formControlName="recommender" placeholder="Select Recommender" >
+                                                   <mat-option *ngFor="let user of user_recommender" [value]="user.id">{{user.loginname}}</mat-option>
+                                                </mat-select>
+                                             </mat-form-field>
+                                        </div>
+                                     </div>
+                                    <div class="matt-group col-md-2">
+                                        <mat-label><b>Level : {{j+1}}</b></mat-label>
+                                     </div>
+                                     <div class="col-md-2">
+                                        <div class="matt-group col-md-1 matt-append-button pos-relative">
+                                          <ng-container >
+                                             <button class="add-intermediate-referral" type="button"  (click)="removeRecommender(j)" mat-fab color="warn"><mat-icon>remove</mat-icon></button>
+                                          </ng-container>
+                                       </div>
+                                     </div>
+                                 </div>
+                              </div>
+                            </ng-container>
+                        </div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="col-md-6">
+               <h5>Approver
+
+                  <div class="matt-group float-right">
+                    <mat-label>&nbsp;</mat-label>
+                    <button type="button" class="btn btn-primary" (click)="onApproverAdd()"><mat-icon>add</mat-icon></button>
+                 </div>
+
+               </h5>
+               <div id="todo" cdkDropList class="example-list" (cdkDropListDropped)="dropApprover($event)">
+               <div formArrayName="approver">
+                     <div class="example-box" *ngFor="let approver of approver.controls; let k=index" cdkDrag>
+                        <ng-container [formGroupName]="k">
+                           <div class="">
+                              <div class="row align-items-center">
+                                  <div class="col-md-4">
+                                     <div class="matt-group">
+                                         <mat-form-field appearance="fill" >
+                                            <mat-select formControlName="approver" placeholder="Select Approver" >
+                                                <mat-option *ngFor="let user of user_approver" [value]="user.id">{{user.loginname}}</mat-option>
+                                             </mat-select>
+                                          </mat-form-field>
+                                     </div>
+                                  </div>
+                                 <div class="matt-group col-md-2">
+                                     <mat-label><b>Level : {{k+1}}</b></mat-label>
+                                  </div>
+                                  <!-- <div class="col-md-2">
+                                     <div class="matt-group col-md-1 matt-append-button pos-relative">
+                                       <ng-container >
+                                          <button class="add-intermediate-referral" type="button"  (click)="removeApprover(k)" mat-fab color="warn"><mat-icon>remove</mat-icon></button>
+                                       </ng-container>
+                                    </div>
+                                  </div> -->
+                              </div>
+                           </div>
+                  </ng-container>
+               </div>
+
+               </div>
+               </div>
+            </div>
+           </div>
+           <div class="form-row button-group-lg button-auto mt-2">
+              <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton_hierarchy data-dismiss="modal">Close</button>
+              </div>
+           </div>
+        </div>
+     </div>
+   </form>
+
+  </div>
+</div>

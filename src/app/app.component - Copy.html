@@ -1,0 +1,125 @@
+<app-header></app-header>
+<app-sidemenu></app-sidemenu>
+<section class="body-card">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div class="card-header">
+						<div class="row">
+							<div class="col-md-6">
+								<h3>Countries</h3>
+							</div>
+							<div class="col-md-6">
+								<div class="text-right">
+									<a href="#" class="btn btn-primary">Create</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="table table-responsive">
+							<table class="table table-striped">
+								<tr>
+									<th>Serial No.</th>
+									<th>Country Name</th>
+									<th>Country Code</th>
+									<th>Status</th>
+									<th class="text-center">Edit</th>
+									<th class="text-center">Delete</th>
+								</tr>
+								<tr>
+									<td>1</td>
+									<td>India</td>
+									<td>+91</td>
+									<td>test</td>
+									<td class="text-center"><a href="#" data-toggle="modal" data-target="#edit-countries" class="edit-icon text-primary"><span class="material-icons-outlined">edit</span></a></td>
+									<td class="text-center"><a href="#" class="edit-icon text-danger"><span class="material-icons-outlined">delete</span></a></td>
+								</tr>
+								<tr>
+									<td>2</td>
+									<td>India</td>
+									<td>+91</td>
+									<td>test</td>
+									<td class="text-center"><a href="#" data-toggle="modal" data-target="#edit-countries" class="edit-icon text-primary"><span class="material-icons-outlined">edit</span></a></td>
+									<td class="text-center"><a href="#" class="edit-icon text-danger"><span class="material-icons-outlined">delete</span></a></td>
+								</tr>
+								<tr>
+									<td>3</td>
+									<td>India</td>
+									<td>+91</td>
+									<td>test</td>
+									<td class="text-center"><a href="#" data-toggle="modal" data-target="#edit-countries" class="edit-icon text-primary"><span class="material-icons-outlined">edit</span></a></td>
+									<td class="text-center"><a href="#" class="edit-icon text-danger"><span class="material-icons-outlined">delete</span></a></td>
+								</tr>
+								<tr>
+									<td>4</td>
+									<td>India</td>
+									<td>+91</td>
+									<td>test</td>
+									<td class="text-center"><a href="#" data-toggle="modal" data-target="#edit-countries" class="edit-icon text-primary"><span class="material-icons-outlined">edit</span></a></td>
+									<td class="text-center"><a href="#" class="edit-icon text-danger"><span class="material-icons-outlined">delete</span></a></td>
+								</tr>
+								<tr>
+									<td>5</td>
+									<td>India</td>
+									<td>+91</td>
+									<td>test</td>
+									<td class="text-center"><a href="#" data-toggle="modal" data-target="#edit-countries" class="edit-icon text-primary"><span class="material-icons-outlined">edit</span></a></td>
+									<td class="text-center"><a href="#" class="edit-icon text-danger"><span class="material-icons-outlined">delete</span></a></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<!-- Edit Countries Modal -->
+<div class="modal fade" id="edit-countries" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Countries</h5>
+      </div>
+      <div class="modal-body form-style-md">
+        <form>
+            <div class="form-row">
+                <div class="col-md-12">
+                  <mat-form-field appearance="legacy">
+				    <mat-label>Country Name</mat-label>
+				    <input matInput placeholder="">
+				  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field appearance="legacy">
+				    <mat-label>Country Code</mat-label>
+				    <input matInput placeholder="">
+				  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                	<div class="form-group form-check">
+					    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+					    <label class="form-check-label" for="exampleCheck1">Active</label>
+					 </div>
+                </div>
+            </div>
+            <div class="form-row mt-3">
+                <div class="col-md-6 col-6">
+                    <button type="button" class="btn btn-primary w-100">Save</button>
+                </div>
+                <div class="col-md-6 col-6">
+                    <button type="button" class="btn btn-secondary w-100" data-dismiss="modal">Cancel</button> 
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>  
+<!-- Edit Countries End-->
+
+<router-outlet></router-outlet>

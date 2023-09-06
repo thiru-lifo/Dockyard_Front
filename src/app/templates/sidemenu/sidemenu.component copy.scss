@@ -1,0 +1,171 @@
+.sidemenu{background: #0b014a; position: fixed; top: 0; bottom: 0; left: 0; z-index: 99; width: 230px; padding-top: 85px; color: #fff; transition: all 0.5s ease; height: 100vh; box-shadow: 0px 5px 14px rgba(31, 28, 29, 0.05), 0px 2px 6px rgba(31, 28, 29, 0.05); transition: all 0.5 ease;}
+.sidemenu ul{padding: 0;}
+.sidemenu ul li{list-style: none; display: block; position: relative;}
+.sidemenu ul li a{padding:10px 20px; color: #CB9B34; display: block; text-decoration: none; font-size: 14px; font-weight: 400;}
+.sidemenu .event-menu ul li{border-bottom: 1px solid #d9d9d9;}
+.sidemenu .event-menu ul li a{padding: 10px 10px 10px 30px; font-size: 14px; font-weight: 400; color: #fff;}
+.sidemenu .event-menu.active .has-arrow{background: #0B014A; color: #fff; font-weight: 600;}
+.sidemenu .event-menu ul li.active a{background: #0B014A; color: #fff; font-weight: 500;}
+.sidemenu .event-menu ul li a:hover, .sidemenu .event-menu ul li a:focus{background: #0B014A; color: #fff;}
+.sidemenu ul li .iconify{font-size: 16px;}
+.sidemenu ul li p{margin: 5px 0 0; display: inline-block;}
+.sidemenu ul li i{position: absolute; top: 20px; left: 15px;}
+.metismenu .has-arrow::after {top: 50%; right: 20px; transform: rotate(315deg);}
+.menu-bar{top: 20px; right: 0; z-index: 99; color: #000;}
+.menu-icon{padding: 10px 25px; font-size: 35px; line-height: 25px; color: #fff;}
+
+.sidemenu li.active a, .sidemenu li a:hover, .sidemenu li a:focus{color: #CB9B34 !important; background: rgba(78, 59, 206,0.5) !important; border-color: #1e1364;font-weight: 600 !important;}
+
+.sidemenu ul li ul{background: #1f1464;}
+.sidemenu ul li ul li a{color: #fff; font-size: 13px;}
+
+/*New*/
+.sidemenu.sidemenu2{width: auto; transition: all 0.5s ease;}
+.sidemenu2 ul li a .menu-title{display: none; transition: all 0.5s ease;}
+.sidemenu2 li a{color: #736D70 !important; font-size: 16px !important; font-weight: 600 !important; padding: 15px 20px !important; display: block; border-right: 4px solid transparent; border-radius: 4px 0px 0px 4px;}
+.sidemenu2 li.active a, .sidemenu2 li a:hover, .sidemenu2 li a:focus{color: #651137 !important; background: #FCEDF4 !important; border-color: #651137;}
+.sidemenu2 li a .iconify {vertical-align: middle; margin-top: -3px; font-size: 18px; margin-right: 5px;}
+.metismenu li{margin-bottom:0px !important;margin-top:0px !important;}
+.sidemenu ul:nth-child(2) ul li a{padding: 10px 10px 10px 45px !important;}
+
+// Menu color
+.sidemenu {
+    padding: 95px 10px 10px;
+    .event-menu {
+        margin-bottom: 7px !important; border-radius: 4px;
+        .has-arrow {
+            font-weight: 600;
+        }
+        .menu-2 {
+            li a {
+                border-radius: 0;
+            }
+        }
+    }
+    ul {    
+        li a {
+            background: #fff; border-radius: 4px;
+        }
+        li:nth-child(1) {
+            a {
+                color: #07bd9e; background: #fff;
+            }  
+        }
+        li:nth-child(2) {
+            background: #f1b229;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #f1b229 !important; color: #fff !important;
+            }
+            .has-arrow {
+              color: #d39207;
+            }
+            .menu-2 {
+                background: #f1b229;
+                a {
+                    color: #fff;  background: #f1b229;
+                    &:hover {
+                        background: #f1b229 !important; color: #000 !important;
+                    }
+                }
+                li {
+                    .has-arrow, a {
+                        background: #f1b229;
+                    }
+                }
+            }
+        }
+
+        li:nth-child(3) {
+            background: #f750bf;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #f750bf !important; color: #fff !important;
+            }
+            .has-arrow {
+              color: #f750bf;
+            }
+            .menu-2 {
+                background: #f750bf;
+                a {
+                    color: #fff;  background: #f750bf;
+                    &:hover {
+                        background: #f750bf !important; color: #000 !important;
+                    }
+                }
+                li {
+                    .has-arrow, a {
+                        background: #f750bf;
+                    }
+                }
+            }
+        }
+
+        li:nth-child(4) {
+            background: #03b630;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #03b630 !important; color: #fff !important;
+            }
+            .has-arrow {
+              color: #03b630;
+            }
+            .menu-2 {
+                background: #03b630;
+                a {
+                    color: #fff;  background: #03b630;
+                    &:hover {
+                        background: #03b630 !important; color: #000 !important;
+                    }
+                }
+                li {
+                    .has-arrow, a {
+                        background: #03b630;
+                    }
+                }
+            }
+        }
+
+        li:nth-child(5) {
+            background: #7f6af7;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #7f6af7 !important; color: #fff !important;
+            }
+            .has-arrow {
+              color: #6750e6;
+            }
+            .menu-2 {
+                background: #7f6af7;
+                a {
+                    color: #fff;  background: #7f6af7;
+                    &:hover {
+                        background: #7f6af7 !important; color: #000 !important;
+                    }
+                }
+                li {
+                    .has-arrow, a {
+                        background: #7f6af7;
+                    }
+                }
+            }
+        }
+
+        li:nth-child(6) {
+            background: #0799e0;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #0799e0 !important; color: #fff !important;
+            }
+            .has-arrow {
+              color: #0799e0;
+            }
+            .menu-2 {
+                background: #0799e0;
+                a {
+                    color: #fff; background: none;
+                }
+                li {
+                    .has-arrow {
+                        background: #0799e0;
+                    }
+                }
+            }
+        }
+    } 
+}

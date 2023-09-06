@@ -1,0 +1,672 @@
+<section class="body-card">
+    <div class="container-fluid">
+       <div class="row">
+          <div class="col-md-12">
+             <div class="card">
+                <div class="card-header">
+                   <div class="row">
+                      <div class="col-md-6">
+                         <h3>Inputs for Staff Requirements</h3>
+                      </div>
+                      <div class="col-md-6">
+                         <div class="text-right">
+                            <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary btn-round-sm"  >Add</a>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+ 
+                <div class="tabs-external tabstyle2">
+                       <div class="container table-options">
+                          <div class="row">
+                             <div class="col-md-6">
+                                <mat-paginator [pageSize]="10" #paginationPending="matPaginator"
+                                [length]="this.dataSourcePending?.filteredData?.length"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                                </mat-paginator>
+                             </div>
+                             <div class="col-md-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Search your text here</mat-label>
+                                    <input matInput (keyup)="applyFilterPending($event)" class="search-mat-table" #input >
+                                </mat-form-field>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="table-responsive">
+                           <table mat-table [dataSource]="dataSourcePending" class="mat-elevation-z8">
+                            <ng-container matColumnDef="project_name">
+                             <th mat-header-cell *matHeaderCellDef><b> Project Name </b></th>
+                             <td mat-cell *matCellDef="let country"> {{country.project_name}} </td>
+                          </ng-container>
+                            <ng-container matColumnDef="whole_ship">
+                             <th mat-header-cell *matHeaderCellDef><b> Whole Ship Features  </b></th>
+                             <td mat-cell *matCellDef="let country"> {{country.whole_ship}} </td>
+                          </ng-container>     
+                          <ng-container matColumnDef="systems">
+                           <th mat-header-cell *matHeaderCellDef><b> Systems </b></th>
+                           <td mat-cell *matCellDef="let country"> {{country.systems}} </td>
+                        </ng-container>                         
+                          
+                          <ng-container matColumnDef="requested_by">
+                             <th mat-header-cell *matHeaderCellDef><b> Created By </b></th>
+                             <td mat-cell *matCellDef="let country"> {{country.first_name+' '+country.last_name}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="requested_on">
+                             <th mat-header-cell *matHeaderCellDef><b> Created On </b></th>
+                             <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY hh:mm A')}} </td>
+                          </ng-container>
+                          <ng-container matColumnDef="email">
+                             <th mat-header-cell *matHeaderCellDef><b> Email </b></th>
+                             <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons">email</span></a> </td>
+                          </ng-container>
+                          <ng-container matColumnDef="approval">
+                             <th mat-header-cell *matHeaderCellDef><b> Approval </b></th>
+                             <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#activity-modal"><span class="material-icons">check_box</span></a> </td>
+                          </ng-container>
+                          <ng-container matColumnDef="upload">
+                             <th mat-header-cell *matHeaderCellDef><b> Upload </b></th>
+                             <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons">drive_folder_upload</span></a> </td>
+                          </ng-container>
+                          
+                        
+                          <ng-container matColumnDef="view" >
+                             <th class="text-center" mat-header-cell *matHeaderCellDef >
+                               <ng-container><b>Action</b></ng-container></th>
+                               <td class="text-center" mat-cell *matCellDef="let country">
+                                <a href="javascript:void(0)" class="edit-icon text-primary"><span class="material-icons-outlined">remove_red_eye</span></a></td>                             
+                          </ng-container>
+                          <ng-container matColumnDef="edit" >
+                             <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                             <td class="text-center" mat-cell *matCellDef="let country">
+                                <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" (click)="editOption(country)"><span class="material-icons-outlined">edit</span></a></td>
+                          </ng-container>
+                          <ng-container matColumnDef="delete">
+                             <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                             <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country.id)"><span class="material-icons-outlined">delete</span></a></td>
+                          </ng-container>
+                          <ng-container matColumnDef="noData">
+                             <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsPending.length" class="norecord">
+                                 No Records Found!
+                             </th >
+                           </ng-container>
+                           <tr mat-header-row *matHeaderRowDef="displayedColumnsPending"></tr>
+                           <ng-container *ngIf="dataListPending.length>0">
+                                 <tr mat-row *matRowDef="let row; columns: displayedColumnsPending;"></tr>
+                            </ng-container>
+                           <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourcePending && dataSourcePending.data.length > 0"></tr>
+                           <tr class="mat-row" *matNoDataRow>
+                             <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                          </tr>
+                       </table>
+                       </div>
+                       
+              </div>
+ 
+             </div>
+          </div>
+       </div>
+    </div>
+ </section>
+ 
+ <!-- modal -->
+ <div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+      <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()"  >
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">{{crudName}} Initiation Notes</h5>      
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button>
+                              <button type="button" class="btn btn-light" (click)="onclose()"  #closebutton data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+      
+                  </div>
+         </div>
+         
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+             <div class="form-row">
+                   <div class="col-md-12">
+                     <div class="matt-group project-relative">
+                         <mat-label>Select Project <b class="star">*</b> 
+                             <!-- <a  href="javascript:void(0)"><span class="material-icons">add</span></a> -->
+                         </mat-label>
+                         <mat-form-field appearance="legacy">
+                               <mat-select formControlName="project_id" placeholder="Select Project" >
+                               <mat-option>None</mat-option>
+                               <!-- <mat-option *ngFor="let trialUnit of trialUnits" [value]="trialUnit.id">{{trialUnit.name}}</mat-option> -->
+                               </mat-select>
+                            <!-- <mat-error *ngIf="Error('project_id','required')">Select Project</mat-error> -->
+                         </mat-form-field> 
+                     </div>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="matt-group icon-right-2">
+                        <div class="icon-group-2">
+                           <ul>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                           </ul>
+                          </div>
+                         <mat-label>Standards <b class="star">*</b></mat-label>
+                         <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                 </div>
+                 <div class="col-md-6">
+                     <div class="matt-group icon-right-2">
+                        <div class="icon-group-2">
+                           <ul>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                           </ul>
+                          </div>
+                        <mat-label>Whole Ship Features  <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                  </div>
+                  
+                  <div class="col-md-12">
+                     <div class="card card-gray mt-1">
+                        <div class="card-header icon-right-2">
+                           Systems
+                           <div class="icon-group-2">
+                              <ul>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">add</span></a></li>
+                              </ul>
+                             </div>
+                        </div>
+                        <div class="card-body table-responsive">
+                           <table class="table table-bordered table-input-length">
+                              <thead>
+                                 <tr>
+                                    <th>Ser</th>
+                                    <th>Numbers</th>
+                                    <th>Capabilities / Feature </th>
+                                    <th>Weight, Volume and Power Consumption </th>
+                                    <th>Location</th>
+                                    <th>Interface</th>
+                                    <th>Procurement Router</th>
+                                    <th>Vendor</th>
+                                    <th>Cost</th>
+                                    <th>Standards</th>
+                                    <th width="10%">Actions</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td><a href="javascript:;" class="text-danger"><span class="material-icons">delete</span></a></td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>                     
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="card card-gray">
+                        <div class="card-header icon-right-2">
+                           Equipment
+                           <div class="icon-group-2">
+                              <ul>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">add</span></a></li>
+                              </ul>
+                             </div>
+                        </div>
+                        <div class="card-body table-responsive">
+                           <table class="table table-bordered table-input-length">
+                              <thead>
+                                 <tr>
+                                    <th>Ser</th>
+                                    <th>Numbers</th>
+                                    <th>Capabilities / Feature </th>
+                                    <th>Weight, Volume and Power Consumption </th>
+                                    <th>Location</th>
+                                    <th>Interface</th>
+                                    <th>Procurement Router</th>
+                                    <th>Vendor</th>
+                                    <th>Cost</th>
+                                    <th>Standards</th>
+                                    <th width="10%">Actions</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td><a href="javascript:;" class="text-danger"><span class="material-icons">delete</span></a></td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>                     
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="card card-gray">
+                        <div class="card-header icon-right-2">
+                           Compartments
+                           <div class="icon-group-2">
+                              <ul>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                 <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">add</span></a></li>
+                              </ul>
+                             </div>
+                        </div>
+                        <div class="card-body table-responsive">
+                           <table class="table table-bordered table-input-length">
+                              <thead>
+                                 <tr>
+                                    <th>Ser</th>
+                                    <th>Name</th>
+                                    <th>Numbers</th>
+                                    <th>Location</th>
+                                    <th>Equipment</th>
+                                    <th>Features</th>
+                                    <th>Layout</th>
+                                    <th> Special Requirements </th>
+                                    <th>Standards</th>
+                                    <th width="10%">Actions</th>
+                                 </tr>
+                              </thead>
+                              <tbody>
+                                 <tr>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td>
+                                       <div class="form-group">
+                                          <input type="text" class="form-control">
+                                       </div>
+                                    </td>
+                                    <td><a href="javascript:;" class="text-danger"><span class="material-icons">delete</span></a></td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>                     
+                  </div>
+
+                  <div class="col-md-12">
+                     <div class="matt-group icon-right-2">
+                        <div class="icon-group-2">
+                           <ul>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                              <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                           </ul>
+                          </div>
+                         <mat-label>Man Power <b class="star">*</b></mat-label>
+                         <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                 </div>
+             </div>
+             <div class="form-row button-group-lg mt-2">
+                <div class="col-md-12">                   
+                   <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >{{crudName}}</button>
+                   <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+                </div>
+             </div>
+             
+          </div>
+       </div>
+      </form>
+    </div>
+ </div>
+ 
+ 
+ <!-- modal -->
+ <div class="modal fade master-modal-style" id="email-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+ 
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+          </div>
+          <div class="modal-body form-style-md form-style-font linux">
+             <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+             </div>
+             <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" >
+             <div class="form-row">
+                   <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>To <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                             <input type="number" matInput name="" value="" formControlName="quantity">
+                                <mat-error *ngIf="Error('quantity','required')">Select To</mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Subject <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                             <input type="text" matInput name="" value="" formControlName="quantity">
+                                <mat-error *ngIf="Error('quantity','required')">Enter Subject</mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Comments <b class="star">*</b></mat-label>
+                         <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Attachment <b class="star">*</b></mat-label>
+                         <input type="file" name="" value="" formControlName="quantity">
+                     </div>
+                 </div>
+             </div>
+             <div class="form-row button-group-lg mt-2">
+                <div class="col-md-12">
+                   
+                   <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Send</button>
+                   <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+                </div>
+             </div>
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+ <!-- modal -->
+ <div class="modal fade master-modal-style" id="activity-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+ 
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Activity Status</h5>
+          </div>
+          <div class="modal-body form-style-md form-style-font linux">
+             <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+             </div>
+             <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" >
+             <div class="form-row">
+                   <div class="col-md-12">
+                     <div class="matt-group">
+                         <div class="matt-group">
+                         <mat-label>Status <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                               <mat-select formControlName="acquisition_method"  placeholder="Select Status" >
+                                   <mat-option>None</mat-option>
+                                   <mat-option>OPEN</mat-option>
+                                   <mat-option>WIP</mat-option>
+                                   <mat-option>CLOSED</mat-option>
+                                   <mat-option>HOLD</mat-option>
+                                   <mat-option>RETURN</mat-option>
+                               </mat-select>
+                            <mat-error *ngIf="Error('acquisition_method','required')">Select Status</mat-error>
+                         </mat-form-field>
+                     </div>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Approved By <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                             <input type="text" matInput name="" value="" formControlName="quantity">
+                                <mat-error *ngIf="Error('quantity','required')">Enter Approved By</mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Approved On <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                             <input type="text" matInput name="" value="" formControlName="quantity">
+                                <mat-error *ngIf="Error('quantity','required')">Enter Approved On</mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Remarks <b class="star">*</b></mat-label>
+                         <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                 </div>
+             </div>
+             <div class="form-row button-group-lg mt-2">
+                <div class="col-md-12">
+                   
+                   <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                   <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+                </div>
+             </div>
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+ <!-- modal -->
+ <div class="modal fade master-modal-style" id="upload-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+          <div class="modal-header">
+             <h5 class="modal-title" id="exampleModalLabel">Upload Documents</h5>
+          </div>
+          <div class="modal-body form-style-md form-style-font linux">
+             <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+             </div>
+             <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" #localform="ngForm">
+             <!-- <div class="row">
+                <div class="col-md-4">
+                   test
+                </div>
+                <div class="col-md-8">
+                   test sdfsfsfsf
+                </div>
+             </div> -->
+             <div class="form-row">
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Document Name <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                             <input type="text" matInput name="" value="" formControlName="quantity">
+                                <mat-error *ngIf="Error('quantity','required')">Enter Document Name</mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Document Remarks <b class="star">*</b></mat-label>
+                         <mat-form-field appearance="legacy">
+                            <textarea matInput placeholder="Enter Remarks"></textarea>
+                                <mat-error *ngIf="Error('quantity','required')">Enter Document Remarks
+                               </mat-error>
+                         </mat-form-field>
+                     </div>
+                 </div>
+                 <!-- <div class="col-md-12">
+                     <div class="matt-group">
+                         <mat-label>Remarks <b class="star">*</b></mat-label>
+                         <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                     </div>
+                 </div> -->
+             </div>
+             <div class="form-row">
+                <div class="col-md-12">
+                   <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">                    
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Document Name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                      </ng-container>                    
+                      <ng-container matColumnDef="remarks">
+                        <th mat-header-cell *matHeaderCellDef> Document Remarks </th>
+                        <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+                      </ng-container>                    
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef width="10%"> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a href="#"><span class="material-icons">delete_outline</span></a>
+                        </td>
+                      </ng-container>                    
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>                    
+                </div>
+             </div>
+             <div class="form-row button-group-lg mt-2">
+                <div class="col-md-12">                   
+                   <button type="submit" class="btn btn-primary">Save</button>
+                   <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+                </div>
+             </div>
+             </form>
+          </div>
+       </div>
+    </div>
+ </div>

@@ -1,0 +1,249 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>Configuration</h3>
+                     </div>
+                    <!--  <div class="col-md-6">
+                        <div class="text-right">
+                           <a href="#" data-toggle="modal" data-target="#crud-countries" (click)="create()" class="btn btn-primary" >Create</a>
+                        </div>
+                     </div> -->
+                  </div>
+               </div>
+               <div class="container table-options">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <mat-paginator [length]="100" [pageSize]="10"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                        </mat-paginator>
+                     </div>
+                     <div class="col-md-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search your text here</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" class="search-mat-table" #input >
+                        </mat-form-field>
+                     </div>
+                  </div>
+               </div>
+               <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <ng-container matColumnDef="name">
+                     <th mat-header-cell *matHeaderCellDef><b> Name</b></th>
+                     <td mat-cell *matCellDef="let config"> {{config.name}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="value">
+                     <th mat-header-cell *matHeaderCellDef><b> Value</b></th>
+                     <td mat-cell *matCellDef="let config"> {{config.value}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="role">
+                     <th mat-header-cell *matHeaderCellDef><b> Role</b></th>
+                     <td mat-cell *matCellDef="let config"> {{ (config.role_detail).length>0?(extractValue(config.role_detail,'name')).toString():'-'  }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="isCenter">
+                     <th mat-header-cell *matHeaderCellDef><b> Is center </b></th>
+                     <td mat-cell *matCellDef="let config"> {{config.isCenter}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="center_detail">
+                     <th mat-header-cell *matHeaderCellDef ><b>Center</b></th>
+                     <td mat-cell *matCellDef="let config"> {{ (config.center_detail).length>0?(extractValue(config.center_detail,'name')).toString():'-'  }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="view" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let values">
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(values)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                     </ng-container>
+                  <ng-container matColumnDef="edit">
+                     <th class="text-center" mat-header-cell *matHeaderCellDef appAccessControl showActions="Edit"><ng-container *ngIf="permission.edit==true"><b>Edit</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let config"><a (click)="editOption(config)" href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.edit==true"><span class="material-icons-outlined">edit</span></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="noData">
+                     <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length" class="norecord">
+                         No Records Found!
+                     </th >
+                   </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                     <td *ngIf="filterValue" class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<!-- modal -->
+<div class="modal fade master-modal-style master-modal-style" id="crud-countries" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{crudName}} Configuration</h5>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" #localForm="ngForm">
+            <div class="form-row">
+               <div class="col-md-12" hidden>
+                  <div class="matt-group">
+                     <mat-label>Configuration id</mat-label>
+                     <mat-form-field appearance="legacy">                        
+                        <input matInput placeholder="" formControlName="id"  >
+                     </mat-form-field>
+                  </div>                  
+               </div>
+               <div class="col-md-12">
+                  <div class="matt-group">
+                     <mat-label> Name <b class="star">*</b></mat-label>
+                     <mat-form-field appearance="legacy">                        
+                        <input matInput placeholder="" formControlName="name" maxlength="100">
+                        <!-- <span>"hi"</span> -->
+                        <mat-error *ngIf="Error('name','required')">Enter name</mat-error>
+                        <mat-error *ngIf="Error('name','pattern')">Alphabet characters only</mat-error>
+                     </mat-form-field>
+                  </div>                  
+               </div>
+               <div class="col-md-12" >
+                     <ng-container *ngIf="config && config.type=='email'">
+                        <div class="matt-group">
+                           <mat-label>Value <b class="star">*</b></mat-label>
+                           <mat-form-field appearance="legacy" >                              
+                              <input type="email" matInput placeholder="" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" value="{{ config.value?config.value:config.default_values }}" formControlName="value" maxlength="100">
+                              <mat-error *ngIf="editForm.get('value').errors && editForm.get('value').errors.pattern">Enter valid email</mat-error>
+                           </mat-form-field>
+                        </div>                        
+                     </ng-container>
+                     <ng-container *ngIf="config && config.type=='text'">
+                        <div class="matt-group">
+                           <mat-label>Value <b class="star">*</b></mat-label>
+                           <mat-form-field appearance="legacy" >                              
+                              <input type="text" matInput placeholder="" value="{{ config.value?config.value:config.default_values }}" formControlName="value" maxlength="100">
+                              <mat-error *ngIf="Error('value','required')">Enter value</mat-error>
+                           </mat-form-field>
+                        </div>                        
+                     </ng-container>
+                     <ng-container *ngIf="config && config.type=='textarea'">
+                        <div class="matt-group">
+                           <mat-label>Value <b class="star">*</b></mat-label>
+                           <mat-form-field appearance="legacy">                              
+                              <textarea matInput placeholder="" cdkTextareaAutosize
+                              cdkAutosizeMinRows="1"
+                              cdkAutosizeMaxRows="5"formControlName="value" maxlength="100">{{ config.value?config.value:config.default_values }}</textarea>
+                           </mat-form-field>
+                        </div>
+                        
+                     </ng-container>
+                     <ng-container *ngIf="config && config.type=='number'">
+                        <div class="matt-group">
+                           <mat-label> number  <b class="star">*</b></mat-label>
+                           <mat-form-field appearance="legacy" >                              
+                              <input type="number" matInput placeholder="" formControlName="value"  [class.is-invalid]="localForm.submitted && editForm.get('value')?.['invalid']" value="{{ config.value?config.value:config.default_values }}" maxlength="100">
+                              <!-- <mat-error *ngIf="editForm.get('value').errors.pattern">Enter number only</mat-error> -->
+                           </mat-form-field>
+                        </div>                       
+                     </ng-container>
+                     <ng-container *ngIf="config && config.type=='radio'">
+                        <mat-label>Select value <b class="star">*</b></mat-label>
+                        <div class="form-group-radio">
+                           <mat-radio-group aria-label="Select an option" formControlName="value" >
+                             <mat-radio-button value="true">True</mat-radio-button>
+                             <mat-radio-button value="false">False</mat-radio-button>
+                           </mat-radio-group>
+                        </div>
+                     </ng-container>
+                     <ng-container *ngIf="config && config.type=='dropdown'">
+                        <div class="matt-group">
+                           <mat-label>Select value <b class="star">*</b></mat-label>
+                           <mat-form-field appearance="legacy">                              
+                              <mat-select formControlName="value" >
+                               <mat-option *ngFor="let value of (config.default_values).split(',')" [value]="value">{{value}}</mat-option> 
+                           </mat-select>
+                           </mat-form-field>
+                        </div>                       
+                     </ng-container>
+                  </div>
+                 
+               <div class="col-md-12">
+                  <div class="matt-group">
+                     <mat-label>Code <b class="star">*</b></mat-label>
+                     <mat-form-field appearance="legacy">                        
+                        <input matInput placeholder="" class="code_field" formControlName="code" maxlength="15" class="code_field">
+                        <mat-error *ngIf="Error('code','required')">Enter code</mat-error>
+                        <mat-error *ngIf="editForm.controls['code'].errors?.pattern" >Alpha-numeric characters only</mat-error>
+                     </mat-form-field>
+                  </div>                  
+               </div>
+               <div class="col-md-12">
+                  <div class="matt-group">
+                     <mat-label>Select roles </mat-label>
+                     <mat-form-field appearance="legacy">                        
+                        <mat-select  #select multiple formControlName="role">
+                           <div class="select-all">
+                              <mat-checkbox [(ngModel)]="allSelected"
+                              [ngModelOptions]="{standalone: true}"
+                              (change)="toggleAllSelection()">Select all</mat-checkbox>
+                           </div>
+                           <mat-option (click)="optionClick()" *ngFor="let role of roles" [value]="role.id">
+                           {{role.name}}
+                           </mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>                  
+               </div>
+               <div class="col-md-12">
+                  <div class="form-group form-check">
+                     <input type="checkbox" class="form-check-input " (click)="toggleShow()" id="exampleCheck1" [checked]="iscentercheck" formControlName="isCenter">
+                     <label class="form-check-label" for="exampleCheck1"  >Is Center</label>
+                  </div>
+               </div>
+
+               <div class="col-md-12" *ngIf="iscentercheck">
+                  <div class="matt-group">
+                     <mat-label>Center name </mat-label>
+                     <mat-form-field appearance="legacy">                        
+                        <mat-select  #select multiple formControlName="center">
+                           <div class="select-all">
+                              <mat-checkbox [(ngModel)]="allSelected"
+                              [ngModelOptions]="{standalone: true}"
+                              (change)="toggleAllSelection()">Select All</mat-checkbox>
+                           </div>
+                           <mat-option (click)="optionClick()" *ngFor="let center of centers" [value]="center.id">
+                           {{center.name}}
+                           </mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>                  
+               </div>
+
+               <div class="col-md-12" hidden>
+                  <div class="matt-group">
+                     <mat-form-field appearance="legacy">
+                        <input matInput placeholder="" formControlName="created_by"  >
+                     </mat-form-field>
+                  </div>                  
+               </div>
+               <div class="col-md-12" hidden>
+                  <div class="matt-group">
+                     <mat-form-field appearance="legacy">
+                        <input matInput placeholder="" formControlName="status"  >
+                     </mat-form-field>
+                  </div>                  
+               </div>
+            </div>
+            <div class="form-row button-group-lg button-auto mt-2">
+               <div class="col-md-6 col-6">
+                  <button type="submit" class="btn btn-primary w-100" *ngIf="!isReadOnly">Save</button>
+               </div>
+               <div class="col-md-6 col-6">
+                  <button type="button" class="btn btn-outline-primary w-100" (click)="close()" #closebutton data-dismiss="modal">Cancel</button> 
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>

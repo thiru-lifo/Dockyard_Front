@@ -1,0 +1,197 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>Template Generation</h3>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-right">
+                           <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation Initiation Notes </a>
+
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="tabs-external tabstyle2" style="display:none">
+                      <div class="container table-options">
+                         <div class="row">
+                            <div class="col-md-6">
+                               <mat-paginator [pageSize]="10" #paginationPending="matPaginator"
+                               [length]="this.dataSourcePending?.filteredData?.length"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                               </mat-paginator>
+                            </div>
+                            <div class="col-md-6">
+                               <mat-form-field appearance="standard">
+                                   <mat-label>Search your text here</mat-label>
+                                   <input matInput (keyup)="applyFilterPending($event)" class="search-mat-table" #input >
+                               </mat-form-field>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="table-responsive">
+                      	<table mat-table [dataSource]="dataSourcePending" class="mat-elevation-z8">
+                           <ng-container matColumnDef="project_name">
+                            <th mat-header-cell *matHeaderCellDef><b> Project Name </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.project.name}} </td>
+                         </ng-container>
+                           <!-- <ng-container matColumnDef="primary_role">
+                            <th mat-header-cell *matHeaderCellDef><b> Primary Role </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.primary_role}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="secondary_role">
+                            <th mat-header-cell *matHeaderCellDef><b> Secondary Roles </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.secondary_role}} </td>
+                         </ng-container> -->
+                         <ng-container matColumnDef="budget">
+                            <th mat-header-cell *matHeaderCellDef><b> Budget</b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.budgeted_cost_per_platform}} </td>
+                         </ng-container>
+
+                         <ng-container matColumnDef="standard">
+                            <th mat-header-cell *matHeaderCellDef><b> Standard </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.standard.name}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="manpower_induction">
+                            <th mat-header-cell *matHeaderCellDef><b> Plan for manpower </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.plan_for_manpower_induction.name}} </td>
+                         </ng-container>
+                         <!-- <ng-container matColumnDef="quantity">
+                            <th mat-header-cell *matHeaderCellDef><b> Quantity </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.quantity}} </td>
+                         </ng-container> -->
+                         <!-- <ng-container matColumnDef="acquisition_method">
+                            <th mat-header-cell *matHeaderCellDef><b> Acquisition Method </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.acquisition_method.name}} </td>
+                         </ng-container> -->
+                         <!-- <ng-container matColumnDef="remarks">
+                            <th mat-header-cell *matHeaderCellDef><b> Remarks </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.remarks}} </td>
+                         </ng-container> -->
+                         <ng-container matColumnDef="requested_by">
+                            <th mat-header-cell *matHeaderCellDef><b> Requested By </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.created_by.first_name+' '+country.created_by.last_name}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="requested_on">
+                            <th mat-header-cell *matHeaderCellDef><b> Requested On </b></th>
+                            <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY hh:mm A')}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef><b> Email </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal" (click)="senEmail(country)"><span class="material-icons">email</span></a> </td>
+                         </ng-container>
+                         <ng-container matColumnDef="approval">
+                            <th mat-header-cell *matHeaderCellDef><b> Approval </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#activity-modal" (click)="approval(country)">
+                            <span class="material-icons" [ngStyle]="{'color':country.approved_status == 2 ? 'green' : ''}">check_box</span></a> </td>
+        
+                           </ng-container>
+                         <ng-container matColumnDef="upload">
+                            <th mat-header-cell *matHeaderCellDef><b> Upload </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal" (click)="document(country)"><span class="material-icons">drive_folder_upload</span></a> </td>
+                         </ng-container>
+
+                         <ng-container matColumnDef="view" >
+                           <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                           <td class="text-center" mat-cell *matCellDef="let project">
+                              <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(project)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                        </ng-container>
+
+                         <ng-container matColumnDef="edit" >
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country">
+                               <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary"  (click)="editOption(country)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="delete">
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="noData">
+                            <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsPending.length" class="norecord">
+                                No Records Found!
+                            </th >
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsPending"></tr>
+                          <ng-container *ngIf="dataListPending.length>0">
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsPending;"></tr>
+                           </ng-container>
+                          <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourcePending && dataSourcePending.data.length > 0"></tr>
+                          <tr class="mat-row" *matNoDataRow>
+                            <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                         </tr>
+
+                      </table>
+                      </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+    <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" >
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">Template - Initiation Notes</h5>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <!-- <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button> -->
+                              <button type="button" class="btn btn-light"   #closebutton data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+
+                  </div>
+         </div>
+
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+
+            <div class="form-row">
+               <!-- <pre>{{ this.initiation_form | json }}</pre> -->
+
+                <div class="col-md-12" *ngFor="let section of initiation_form">
+                	<div class="matt-group">
+                        <mat-label>Section {{section.section_value}} <b class="star">*</b></mat-label>
+
+
+                           <ng-container *ngIf="section.sub_sub_section_value!=''">
+                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                 Sub Section {{section.sub_section_value}}
+                           </ng-container>
+
+                           <ng-container *ngIf="section.sub_sub_section_value==''">
+                                 &nbsp;&nbsp;&nbsp;&nbsp;
+                                 Sub Section {{section.sub_section_value}}
+                                 <angular-editor formControlName="Sub_section" [config]="editorConfig" ></angular-editor>
+                           </ng-container>
+
+                           <ng-container *ngIf="section.sub_sub_section_value!=''">
+                              <div>
+                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                 Sub Sub Section {{section.sub_sub_section_value}}
+
+                                 <angular-editor formControlName="Sub_sub_section" [config]="editorConfig" ></angular-editor>
+                              </div>
+                           </ng-container>
+                  </div>
+                </div>
+
+            </div>
+
+         </div>
+      </div>
+   </form>
+   </div>
+</div>

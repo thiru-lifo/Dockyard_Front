@@ -1,0 +1,179 @@
+.sidemenu{background: #0b014a; position: fixed; top: 0; bottom: 0; left: 0; z-index: 99; width: 230px; padding-top: 85px; color: #fff; transition: all 0.5s ease; height: 100vh; box-shadow: 0px 5px 14px rgba(31, 28, 29, 0.05), 0px 2px 6px rgba(31, 28, 29, 0.05); transition: all 0.5 ease;}
+.sidemenu ul{padding: 0;}
+.sidemenu ul li{list-style: none; display: block; position: relative;}
+.sidemenu ul li a{padding:10px 20px; color: #CB9B34; display: block; text-decoration: none; font-size: 1.2em; font-weight: 400;}
+.sidemenu .event-menu ul li{border-bottom: 1px solid #d9d9d9;}
+.sidemenu .event-menu ul li a{padding: 10px 10px 10px 30px; font-size: 1.1em; font-weight: 400; color: #fff;}
+.sidemenu .event-menu.active .has-arrow{color: #fff; font-weight: 600;}
+.sidemenu .event-menu ul li.active a{color: #fff; font-weight: 500;}
+.sidemenu ul li .iconify{font-size: 16px;}
+.sidemenu ul li p{margin: 5px 0 0; display: inline-block;}
+.sidemenu ul li i{position: absolute; top: 20px; left: 15px;}
+.metismenu .has-arrow::after {top: 50%; right: 20px; transform: rotate(315deg);}
+.menu-bar{top: 20px; right: 0; z-index: 99; color: #000;}
+.menu-icon{padding: 10px 25px; font-size: 35px; line-height: 25px; color: #fff;}
+
+.sidemenu li.active a, .sidemenu li a:hover, .sidemenu li a:focus{color: #fff; border-color: #1e1364;font-weight: 600 !important;}
+
+.sidemenu ul li ul{background: #1f1464;}
+.sidemenu ul li ul li a{color: #fff;}
+
+/*New*/
+.sidemenu.sidemenu2{width: auto; transition: all 0.5s ease;}
+.sidemenu2 ul li a .menu-title{display: none; transition: all 0.5s ease;}
+.sidemenu2 li a{color: #736D70 !important; font-size: 16px !important; font-weight: 600 !important; padding: 15px 20px !important; display: block; border-right: 4px solid transparent; border-radius: 4px 0px 0px 4px;}
+.sidemenu2 li.active a, .sidemenu2 li a:hover, .sidemenu2 li a:focus{color: #651137 !important; background: #FCEDF4 !important; border-color: #651137;}
+.sidemenu2 li a .iconify {vertical-align: middle; margin-top: -3px; font-size: 18px; margin-right: 5px;}
+.metismenu li{margin-bottom:0px !important;margin-top:0px !important;}
+.sidemenu ul:nth-child(2) ul li a{padding: 10px 10px 10px 45px !important;}
+
+// Sidemenu3
+.sidemenu.sidemenu-3 {
+    padding: 95px 10px 0;
+    li {
+        a {
+            &:hover, &:focus {
+                background: #2360f0 !important; color: #fff !important;
+            }  
+        }
+    }
+    .event-menu {
+        margin-bottom: 5px !important; border-radius: 20px; 
+        .has-arrow {
+            font-weight: 600; 
+            border-radius: 20px;            
+        }
+        .menu-2 {
+            li a {
+               border-radius: 0;
+            }
+        }        
+    }
+    ul {            
+        li:nth-child(1) {
+            a {
+                background: #043464; border-radius: 20px; color: #fff !important;
+            }  
+        }
+
+        li:nth-child(2) {
+            background: #0a4785;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #2360f0;
+            }
+            .has-arrow {
+              color: #fff; background: #0a4785;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #0a4785;
+                a {
+                    color: #fff; background: #0a4785;                     
+                    &:hover, &:focus {
+                        background: #2360f0 !important; color: #fff !important;
+                    }                
+                }
+            }
+        }
+
+        li:nth-child(3) {
+            background: #0a4988;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #2360f0;
+            }
+            .has-arrow {
+              color: #fff; background: #0a4988;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #0a4988;
+                a {
+                    color: #fff; background: #0a4988;                     
+                    &:hover, &:focus {
+                        background: #2360f0; color: #fff;
+                    }                
+                }
+            }
+        }
+
+        li:nth-child(4) {
+            background: #0d5eae;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #2360f0;
+            }
+            .has-arrow {
+              color: #fff; background: #0d5eae;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #0d5eae;
+                a {
+                    color: #fff; background: #0d5eae;                     
+                    &:hover, &:focus {
+                        background: #2360f0; color: #fff;
+                    }                
+                }
+            }
+        }
+
+        li:nth-child(5) {
+            background: #0d6fd0;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #2360f0;
+            }
+            .has-arrow {
+              color: #fff; background: #0d6fd0;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #0d6fd0;
+                a {
+                    color: #fff; background: #0d6fd0;                     
+                    &:hover, &:focus {
+                        background: #2360f0; color: #fff;
+                    }                
+                }
+            }
+        }
+
+        li:nth-child(6) {
+            background: #1580ee;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #2360f0;
+            }
+            .has-arrow {
+              color: #fff; background: #1580ee;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #1580ee;
+                a {
+                    color: #fff; background: #1580ee;                     
+                    &:hover, &:focus {
+                        background: #2360f0; color: #fff;
+                    }                
+                }
+            }
+        }
+
+        li:nth-child(7) {
+            background: #0e83f8;
+            .has-arrow:hover, .has-arrow:focus {
+                background: #0e83f8;
+            }
+            .has-arrow {
+              color: #fff; background: #0e83f8;
+              border-radius: 20px;              
+            }
+            .menu-2 {  
+                background: #0e83f8;
+                a {
+                    color: #fff; background: #0e83f8;                     
+                    &:hover, &:focus {
+                        background: #0e83f8; color: #fff;
+                    }                
+                }
+            }
+        }
+    } 
+}

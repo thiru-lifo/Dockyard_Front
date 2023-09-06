@@ -1,0 +1,218 @@
+<section class="body-card">
+  <div class="container-fluid">
+    <div class="card main-card">
+      <div class="text-right btn btn-light"><a href="#" routerLink="/project-list/list">Back</a></div>
+      <div class="card-header header3">{{dataProjectDetail['project'][0].name}}</div>
+      
+      <div class="card-body main-body">
+        
+        <div class="row">
+          <div class="col-md-12">
+            <div class="timeline-cover">
+              <img src="assets/images/warship-timeline-1.jpg" class="img-fluid bg-image" alt="" title="">
+              <ul class="timeline">
+                <li class="active">
+                  <div class="icon">
+                    <img src="assets/images/step1.jpg">
+                  </div>
+                  <p>PSR <span>{{dataProjectDetail['psr'].percent}}%</span></p>
+                </li>
+
+                <li class="{{dataProjectDetail['gls'].percent==100 ? 'active':''}}">
+                  <div class="icon">
+                    <img src="assets/images/step3.jpg">
+                  </div>
+                  <p>GLS <span>{{dataProjectDetail['gls'].percent}}%</span></p>
+                </li>
+
+                <li class="{{dataProjectDetail['bls'].percent==100 ? 'active':''}}">
+                  <div class="icon">
+                    <img src="assets/images/step2.jpg">
+                  </div>
+                  <p>BLS <span>{{dataProjectDetail['bls'].percent}}%</span></p>
+                </li>
+
+                <li class="">
+                  <div class="icon">
+                    <img src="assets/images/step4.jpg">
+                  </div>
+                  <p>SOTR <span>0%</span></p>
+                </li>
+                <li class="">
+                  <div class="icon">
+                    <img src="assets/images/step5.jpg">
+                  </div>
+                  <p>DFR <span>0%</span></p>
+                </li>
+                <li class="">
+                  <div class="icon">
+                    <img src="assets/images/step6.jpg">
+                  </div>
+                  <p>PND <span>0%</span></p>
+                </li>
+                <li class="">
+                  <div class="icon">
+                    <img src="assets/images/step7.jpg">
+                  </div>
+                  <p>D787 <span>0%</span></p>
+                </li>
+                <li class="">
+                  <div class="icon">
+                    <img src="assets/images/step8.jpg">
+                  </div>
+                  <p>GD <span>0%</span></p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>        
+
+        <div class="row graph-card">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                PSR
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="psr"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                GLS
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="gls"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                BLS
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="bls"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                SOTR
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="piechartcontainer4"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                DFR
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="piechartcontainer5"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                BND
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="piechartcontainer6"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                D787
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="piechartcontainer7"></div>
+                </div> 
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                GD
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <div id="piechartcontainer8"></div>
+                </div> 
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>    
+
+    <div class="form-row card-hg1">
+      <div class="col-md-12">
+        <ngb-accordion class="range-accordion" [closeOthers]="true" activeIds="static-a1">
+          <ngb-panel id="static-a1" title="Recent Notifications">
+            <ng-template ngbPanelContent>
+              <ng-container *ngIf="notificationsList.length==0">
+
+                                    <a href="javascript:void(0)" class="list-group-item no-notification p-0" aria-current="true">
+                                        <img src="assets/images/no-alarm.png" style="width:100%;" class="img-fluid" alt="" title="">
+                                      </a>
+                                </ng-container>
+              <ng-container>
+              <div class="notification-box">
+                <!-- Start -->
+              
+                <ng-container *ngIf="notificationsList.length>0">
+                  <ng-container *ngFor="let notification of notificationsList">
+                  <div class="notification-row">
+                    <div class="notify-icon">
+                      <span class="material-icons">notifications_none</span>
+                    </div>
+                    <div class="notify-content">
+                      <a href="javascript:void(0)" class="" aria-current="true">
+                       <p class="mb-1">{{ notification.message }}</p>
+                                              <p class="hmnotify-date">{{ moment(notification.created_on).fromNow() }}</p>
+                        </a>
+                    </div>
+                  </div>
+                </ng-container>
+
+                
+                </ng-container>
+                  <!-- End -->
+ 
+               </div>
+              </ng-container>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+     </div>
+
+  </div> 
+
+
+</section>
+
+

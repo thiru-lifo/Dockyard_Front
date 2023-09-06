@@ -1,0 +1,220 @@
+<!-- <section class="body-card">
+    <div class="container-fluid">
+         <div class="card-list-gird">
+            <div class="card">
+                <div class="card-header header-button bigfont">
+                    Project List <a href="#" routerLink="/transaction/psr/initiation-notes" class="round-btn"><span class="material-icons-outlined">add</span></a>
+                </div>
+            </div>
+            <div class="card-body pt-0"> 
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6" *ngFor="let project of projectList">
+                        <div class="card project-card" routerLink="/transaction/psr/dashboard" [queryParams]="{project_id: project.project.id}">
+                            <a>{{project.project.name}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</section> -->
+
+
+<div>
+    
+<section class="body-card">
+  <div class="container-fluid">
+    <div class="row d-flex align-items-center form-style-md">
+      <div class="col-md-6">
+        <div class="heading-style3">
+          <h3>Dashboard</h3>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="matt-group  matt-select-multi1">
+          <mat-form-field appearance="fill">
+            <mat-select placeholder="Choose widgets" multiple (selectionChange)="onChangeWidget()" [(ngModel)]="psr_custom_dashboard">
+              <mat-option value="initiation-count" selected>Initiation Notes</mat-option>
+              <mat-option value="formulation-count" selected>Formulation of approach paper</mat-option>
+              <mat-option value="presentation-count">Presentation of approach paper</mat-option>
+              <mat-option value="input-count">Input of Staff Requirements</mat-option>
+              <mat-option value="concept-count">Concept Design</mat-option>
+              <mat-option value="incorporation-count">Incorporation of design inputs</mat-option>
+              <mat-option value="receipt-count">Receipt of RFI Responses</mat-option>
+              <mat-option value="project-list">Projects</mat-option>
+           </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row content-big-round">
+      <div class="col-md-4" *ngIf="checkWidgetExists('initiation-count')">
+        <div class="content-box bg1 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+            <img src="assets/images/units.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>Initiation Notes</p>
+            <h3>{{psr_ini_active_count > 0 ? psr_ini_active_count : "0"}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" *ngIf="checkWidgetExists('formulation-count')">
+        <div class="content-box bg2 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+           <img src="assets/images/satellite.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>Formulation of approach paper</p> 
+            <h3>{{psr_formulation_active_count > 0 ? psr_formulation_active_count : "0"}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" *ngIf="checkWidgetExists('presentation-count')">
+        <div class="content-box bg3 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+           <img src="assets/images/ship.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>Presentation of approach paper</p>
+            <h3>{{psr_presentation_active_count > 0 ? psr_presentation_active_count : "0"}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4" *ngIf="checkWidgetExists('input-count')">
+       <div class="content-box bg4 d-flex align-items-center content-big-box">
+         <div class="left-icon">
+          <img src="assets/images/equipments.png" alt="" title="">
+         </div>
+         <div class="content-right">
+           <p>Input of Staff Requirements</p>
+           <h3>{{psr_input_active_count > 0 ? psr_input_active_count : "0"}}</h3>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-md-4" *ngIf="checkWidgetExists('concept-count')">
+       <div class="content-box bg6 d-flex align-items-center content-big-box">
+         <div class="left-icon">
+          <img src="assets/images/trial2.png" alt="" title="">
+         </div>
+         <div class="content-right">
+           <p>Concept Design</p>
+           <h3>{{psr_concept_active_count > 0 ? psr_concept_active_count : "0"}}</h3>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-md-4" *ngIf="checkWidgetExists('incorporation-count')">
+      <div class="content-box bg5 d-flex align-items-center content-big-box">
+        <div class="left-icon">
+         <img src="assets/images/trial2.png" alt="" title="">
+        </div>
+        <div class="content-right">
+          <p>Incorporation of design inputs</p>
+          <h3>{{psr_incorporation_active_count > 0 ? psr_incorporation_active_count : "0"}}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4" *ngIf="checkWidgetExists('receipt-count')">
+      <div class="content-box bg3 d-flex align-items-center content-big-box">
+        <div class="left-icon">
+         <img src="assets/images/trial2.png" alt="" title="">
+        </div>
+        <div class="content-right">
+          <p>Receipt of RFI Responses</p>
+          <h3>{{psr_receipt_active_count > 0 ? psr_receipt_active_count : "0"}}</h3>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+
+    <div class="" *ngIf="checkWidgetExists('project-list')">
+      <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+         <ngb-panel id="static-b3" title="Projects">
+
+            <ng-template ngbPanelContent>
+                <div class="add-right">
+                <a href="#" routerLink="/transaction/psr/initiation-notes"><span class="material-icons">add</span></a>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4"  *ngFor="let project of projectList">
+                    <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                      <div class="card-body">
+                        <h5 class="card-title">{{project.project[0]['name']}}</h5>
+                        <p class="card-text">Class: {{project.project[0]['class_id']['name']}}</p>
+
+                        <a href="#" class="btn btn-primary" routerLink="/transaction/psr/dashboard" [queryParams]="{project_id: project.project[0]['id']}">View Detail</a>
+                        &nbsp;&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary"  (click)="getProjectLog(project.project[0]['id'])" >View Log</a>
+
+
+                        
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </ng-template>
+            
+         </ngb-panel>
+       </ngb-accordion>
+      
+    </div>
+    <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+      <ngb-panel id="static-b3" title="Sub Module Details">
+        <ng-template ngbPanelContent>
+    <div class="card-body mt-n10">
+      <div id="chartdivSubModule" style="width: 100%; height: 450px"></div>
+      
+    </div>
+   </ng-template>
+   </ngb-panel>
+   </ngb-accordion>
+  
+
+  </div>
+</section>
+
+
+</div>
+<div class="modal fade master-modal-style" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Project Log</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+              <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+          <div class="container mt-5 mb-5">
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Project Log</h4>
+                <div *ngFor="let role of projectlog" >
+                  
+                <ul class="timeline">
+                 
+                  
+                  <li>
+                    <a  href="javascript:void(0)">{{role.project.name}}</a>
+                    <a href="javascript:void(0)" class="float-right">{{moment(role.created_on).format('DD-MM-YYYY')}} </a>
+                    <p>{{role.msg}}</p>
+                  </li>      
+                </ul>
+              </div>
+              </div>
+            </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+

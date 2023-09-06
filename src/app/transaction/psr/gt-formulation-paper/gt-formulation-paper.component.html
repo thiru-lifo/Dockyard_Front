@@ -1,0 +1,511 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>Global Transaction - Formulation of Approach Paper</h3>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-right">
+                           
+                           <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Add </a>
+                           
+                           <!-- <a href="#" data-toggle="modal" data-target="#crud-countries1" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation of  Approach Paper </a>
+                           <a href="#" data-toggle="modal" data-target="#crud-countries2" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation of Input For SR</a>
+                            <a href="#" data-toggle="modal" data-target="#crud-countries3" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation of  Concept Design</a>
+                             <a href="#" data-toggle="modal" data-target="#crud-countries4" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation of Incorporation Design Inputs </a>
+                             <a href="#" data-toggle="modal" data-target="#crud-countries5" class="btn btn-primary btn-round-sm" (click)="genInitiationTemplate()">Generation of RFI </a> -->
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="tabs-external tabstyle2">
+                      <div class="container table-options">
+                         <div class="row">
+                            <div class="col-md-6">
+                               <mat-paginator [pageSize]="10" #paginationPending="matPaginator"
+                               [length]="this.dataSourcePending?.filteredData?.length"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                               </mat-paginator>
+                            </div>
+                            <div class="col-md-6">
+                               <mat-form-field appearance="standard">
+                                   <mat-label>Search your text here</mat-label>
+                                   <input matInput (keyup)="applyFilterPending($event)" class="search-mat-table" #input >
+                               </mat-form-field>
+                            </div>
+                         </div>
+                      </div>
+                      <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSourcePending" class="mat-elevation-z8">
+                           <ng-container matColumnDef="project_name">
+                            <th mat-header-cell *matHeaderCellDef><b> Project Name </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.project.name}}</td>
+                         </ng-container>
+                           <!-- <ng-container matColumnDef="primary_role">
+                            <th mat-header-cell *matHeaderCellDef><b> Primary Role </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.primary_role}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="secondary_role">
+                            <th mat-header-cell *matHeaderCellDef><b> Secondary Roles </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.secondary_role}} </td>
+                         </ng-container> 
+                         <ng-container matColumnDef="budget">
+                            <th mat-header-cell *matHeaderCellDef><b> Budget</b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.budgeted_cost_per_platform}} </td>
+                         </ng-container>
+
+                         <ng-container matColumnDef="standard">
+                            <th mat-header-cell *matHeaderCellDef><b> Standard </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.standard.name}} </td>
+                         </ng-container>
+                         <ng-container matColumnDef="manpower_induction">
+                            <th mat-header-cell *matHeaderCellDef><b> Plan for manpower </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.plan_for_manpower_induction.name}} </td>
+                         </ng-container>-->
+                         <!-- <ng-container matColumnDef="quantity">
+                            <th mat-header-cell *matHeaderCellDef><b> Quantity </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.quantity}} </td>
+                         </ng-container> -->
+                         <!-- <ng-container matColumnDef="acquisition_method">
+                            <th mat-header-cell *matHeaderCellDef><b> Acquisition Method </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.acquisition_method.name}} </td>
+                         </ng-container> -->
+                         <!-- <ng-container matColumnDef="remarks">
+                            <th mat-header-cell *matHeaderCellDef><b> Remarks </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.remarks}} </td>
+                         </ng-container> -->
+                         <!-- <ng-container matColumnDef="requested_by">
+                            <th mat-header-cell *matHeaderCellDef><b> Requested By </b></th>
+                            <td mat-cell *matCellDef="let country"> {{country.created_by.first_name+' '+country.created_by.last_name}} </td>
+                         </ng-container> -->
+                         <ng-container matColumnDef="requested_on">
+                            <th mat-header-cell *matHeaderCellDef><b> Created On </b></th>
+                            <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY')}} </td>
+                         </ng-container>
+                         <!--<ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef><b> Email </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal" (click)="senEmail(country)"><span class="material-icons">email</span></a> </td>
+                         </ng-container>-->
+                         <ng-container matColumnDef="approval">
+                            <th mat-header-cell *matHeaderCellDef><b> Approval </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#activity-modal" (click)="approval(country)">
+                            <span class="material-icons" [ngStyle]="{'color':country.approved_status == 2 ? 'green' : ''}">check_box</span></a> </td>
+        
+                           </ng-container>
+                         <!--<ng-container matColumnDef="upload">
+                            <th mat-header-cell *matHeaderCellDef><b> Upload </b></th>
+                            <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal" (click)="document(country)"><span class="material-icons">drive_folder_upload</span></a> </td>
+                         </ng-container>-->
+
+                         <ng-container matColumnDef="view" >
+                           <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                           <td class="text-center" mat-cell *matCellDef="let project">
+                              <a href="#" data-toggle="modal" data-target="#crud-countries-edit" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(project)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                        </ng-container>
+
+                         <ng-container matColumnDef="edit" >
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country">
+                               <a href="#" data-toggle="modal" data-target="#crud-countries-edit" class="edit-icon text-primary"  (click)="editOption(country)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="delete">
+                            <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                         </ng-container>
+                         <ng-container matColumnDef="noData">
+                            <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsPending.length" class="norecord">
+                                No Records Found!
+                            </th >
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsPending"></tr>
+                          <ng-container *ngIf="dataListPending.length>0">
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsPending;"></tr>
+                           </ng-container>
+                          <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourcePending && dataSourcePending.data.length > 0"></tr>
+                          <tr class="mat-row" *matNoDataRow>
+                            <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                         </tr>
+
+                      </table>
+                      </div>
+               </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+    <form (ngSubmit)="onSubmit('add')" >
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">PSR - Formulation of Approach Paper</h5>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button>
+                              <button type="button" class="btn btn-light"   #closebutton data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+
+                  </div>
+         </div>
+
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+
+            <div class="form-row">
+
+               <div class="col-md-12">
+                   <div class="matt-group project-relative">
+                       <mat-label>Select Project <b class="star">*</b> </mat-label>
+                       <mat-form-field appearance="legacy">
+                              <mat-select placeholder="Select Project"  #projectID  (selectionChange)="changeProject($event.value)" >
+                              <mat-option *ngFor="let project of FinalArray" [value]="project.id">{{project.name}}</mat-option>
+                              </mat-select>
+                       </mat-form-field>
+
+                   </div>
+               </div>
+            
+               <!-- <pre>{{ this.global_psr | json }}</pre> -->
+
+               <!-- <div class="col-md-12" *ngFor="let psr of global_psr">
+
+                   <div class="col-md-12">
+                    <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                       <ngb-panel id="static-b3" title="{{psr.name}}">
+                          <ng-template ngbPanelContent> -->
+
+
+
+                        <div *ngIf="forms" class="col-md-12">
+                           <div class="col-md-12" *ngFor="let form of forms; let a=index">
+                              <!-- <input type="text" [(ngModel)]="form.submodule.id" name="sub_module_{{a}}"> -->
+
+                               <div class="col-md-12" *ngFor="let section of form.section;let i=index">
+                                  <div class="col-md-12">
+                                   <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                                      <ngb-panel id="static-b3" title="{{section.name}}">
+                                         <ng-template ngbPanelContent>
+                                            <div class="matt-group">
+
+                                               <ng-container *ngIf="section.subsections.length==0">
+                                                   <!-- sec -->
+                                                   <angular-editor [(ngModel)]="section.paragraph" (keyup)="checkValue()" [config]="editorConfig" name="section_{{i}}}_{{genRandom()}}"></angular-editor >
+
+
+                                                   <!-- <textarea [(ngModel)]="section.paragraph" (keyup)="checkValue()" name="section_{{i}}}_{{genRandom()}}" rows="4" cols="100%"></textarea> -->
+                                                   
+                                                </ng-container>
+
+                                                   <ng-container *ngIf="section.subsections.length>0;">
+                                                      <ng-container *ngFor="let subsections of section.subsections; let j=index">
+                                                       
+                                                         <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;{{subsections.name}} 
+
+                                                            <!-- {{"Sub section"+subsections.id}} -->
+                                                            <b class="star">*</b></mat-label>
+                                                         <ng-container *ngIf="subsections.subsubsections.length==0">
+                                                            <!-- sub sec -->
+                                                            <angular-editor [(ngModel)]="subsections.paragraph" (keyup)="checkValue()"  [config]="editorConfig" name="sub_section_{{j}}_{{i}}_{{genRandom()}}"></angular-editor>
+
+                                                            <!-- <textarea [(ngModel)]="subsections.paragraph" (keyup)="checkValue()"  name="sub_section_{{j}}_{{i}}_{{genRandom()}}"  rows="4" cols="100%"></textarea> -->
+                                                         </ng-container>
+                                                         <ng-container *ngIf="subsections.subsubsections.length>0;">
+                                                            <ng-container *ngFor="let subsubsections of subsections.subsubsections; let k=index"> 
+                                                            <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{subsubsections.name}}
+                                                               <!-- {{"Sub sub section"+subsubsections.id}} -->
+                                                               <b class="star">*</b></mat-label>
+                                                            <!-- ss sec -->
+                                                             <angular-editor  [(ngModel)]="subsubsections.paragraph" (keyup)="checkValue()" [config]="editorConfig" name="sub_sub_section_{{j}}_{{i}}_{{k}}_{{genRandom()}}"></angular-editor>
+                                                             
+                                                             <!-- <textarea  [(ngModel)]="subsubsections.paragraph" (keyup)="checkValue()"  rows="4" cols="100%"  name="sub_sub_section_{{j}}_{{i}}_{{k}}_{{genRandom()}}"></textarea> -->
+                                                         </ng-container>
+                                                         </ng-container>
+                                                      </ng-container>
+                                                   </ng-container>
+                                          </div>
+                                         </ng-template>
+                                      </ngb-panel>
+                                    </ngb-accordion>
+                                 </div>               
+                               </div>
+                           </div>
+                        </div>                         
+
+                         <!-- </ng-template>
+                      </ngb-panel>
+                   </ngb-accordion>
+                </div>
+
+
+               </div> -->
+            </div>
+
+         </div>
+      </div>
+   </form>
+   </div>
+</div>
+
+
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries-edit" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+    <form (ngSubmit)="onSubmit('edit')" >
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">PSR - Formulation of Approach Paper Edit</h5>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button>
+                              <button type="button" class="btn btn-light"   #closebutton_edit data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+
+                  </div>
+         </div>
+
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+
+            <div class="form-row">
+               <input type="hidden" name="gtID" #gtID>
+               <input type="hidden" name="moduleID" #moduleID>
+
+               <div class="col-md-12">
+                   <div class="matt-group project-relative">
+                       <mat-label>Select Project <b class="star">*</b> </mat-label>
+                       <mat-form-field appearance="legacy">
+                        <input matInput value={{editt}} [disabled]="pro">
+                              <!-- <mat-select placeholder="Select Project"  #projectID (selectionChange)="changeProject($event.value)" [(ngModel)]="editt"  [disabled]="pro">
+                              <mat-option *ngFor="let project of FinalArray" [value]="project.id">{{project.name}}</mat-option> -->
+                              
+                       </mat-form-field>
+                   </div>
+               </div>
+
+                           <div *ngIf="initiation_form_mapping">
+
+                            <div class="col-md-12" *ngFor="let section of initiation_form_mapping;let i=index">
+                               <div class="col-md-12">
+                                <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                                   <ngb-panel id="static-b3" title="{{section.name}}">
+                                      <ng-template ngbPanelContent>
+                                         <div class="matt-group">
+
+                                            <ng-container *ngIf="section.sub_section.length==0">
+                                                <div *ngFor="let section_para of section.section_para">
+                                                   <angular-editor [(ngModel)]="section_para.paragraph" (keyup)="checkValueMapping()" [config]="editorConfig" name="section_{{i}}"></angular-editor>
+                                                </div>
+                                                
+                                             </ng-container>
+
+                                                <ng-container *ngIf="section.sub_section.length>0;">
+                                                   <ng-container *ngFor="let sub_section of section.sub_section; let j=index">
+                                                    
+                                                      <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;{{sub_section.name}} 
+                                                         <!-- {{"Sub section"+sub_section.id}} -->
+                                                         <b class="star">*</b></mat-label>
+                                                      <ng-container *ngIf="sub_section.sub_sub_section.length==0">
+                                                          <!-- sub sec  {{'j'+j+'i'+i}} -->
+
+
+                                                      <div *ngFor="let sub_section_para of sub_section.sub_section_para">
+                                                         <angular-editor [(ngModel)]="sub_section_para.paragraph" (keyup)="checkValueMapping()" [config]="editorConfig" name="sub_section_{{j}}_{{i}}"></angular-editor>
+                                                      </div>
+
+                                                      </ng-container>
+                                                      <ng-container *ngIf="sub_section.sub_sub_section.length>0;">
+                                                         <ng-container *ngFor="let sub_sub_section of sub_section.sub_sub_section; let k=index"> 
+                                                         <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sub_sub_section.name}} 
+                                                         <!-- {{"Sub sub section"+sub_sub_section.id}} -->
+                                                         <b class="star">*</b></mat-label>
+                                                         <!-- ss sec {{'k'+k+'j'+j+'i'+i}} -->
+
+                                                      <div *ngFor="let sub_sub_section_para of sub_sub_section.sub_sub_section_para">
+                                                         <angular-editor [(ngModel)]="sub_sub_section_para.paragraph" (keyup)="checkValueMapping()" [config]="editorConfig" name="sub_sub_section_{{j}}_{{i}}_{{k}}"></angular-editor>
+                                                      </div>
+
+                                                      </ng-container>
+                                                      </ng-container>
+                                                   </ng-container>
+                                                </ng-container>
+                                       </div>
+                                      </ng-template>
+                                   </ngb-panel>
+                                 </ngb-accordion>
+                              </div>               
+                            </div>
+                         </div>
+
+
+                           
+                            <div class="col-md-12" *ngFor="let section of global_psr1;let i=index">
+                               <div class="col-md-12">
+                                <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                                   <ngb-panel id="static-b3" title="{{section.name}}">
+                                      <ng-template ngbPanelContent>
+                                         <div class="matt-group">
+
+                                            <ng-container *ngIf="section.sub_section.length==0">
+
+                                             
+                                                <!-- sec {{'i'+i}} -->
+                                                <!-- <angular-editor [(ngModel)]="section.section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" ></angular-editor> -->
+
+
+
+                                                <div *ngFor="let section_para of section.section_para">
+                                                   <!-- <angular-editor [(ngModel)]="section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" name="section_{{i}}"></angular-editor> -->
+
+                                                   <textarea [(ngModel)]="section_para.paragraph" (keyup)="checkValue1()"  name="section_{{i}}" rows="4" cols="100%" [disabled]="isReadonly">{{section_para.paragraph}}</textarea>
+                                                </div>
+                                                
+                                             </ng-container>
+
+                                                <ng-container *ngIf="section.sub_section.length>0;">
+                                                   <ng-container *ngFor="let sub_section of section.sub_section; let j=index">
+                                                    
+                                                      <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;{{sub_section.name}} 
+                                                         <!-- {{"Sub section"+sub_section.id}} -->
+                                                         <b class="star">*</b></mat-label>
+                                                      <ng-container *ngIf="sub_section.sub_sub_section.length==0">
+                                                          <!-- sub sec  {{'j'+j+'i'+i}} -->
+                                                          
+                                                         
+                                                         
+                                                         <!-- <angular-editor [(ngModel)]="sub_section.sub_section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" ></angular-editor> -->
+
+
+                                                      <div *ngFor="let sub_section_para of sub_section.sub_section_para">
+                                                         <!-- <angular-editor [(ngModel)]="sub_section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" name="sub_section_{{j}}_{{i}}"></angular-editor> -->
+
+                                                         <textarea [(ngModel)]="sub_section_para.paragraph" (keyup)="checkValue1()"  name="sub_section_{{j}}_{{i}}" rows="4" cols="100%" [disabled]="isReadonly">{{sub_section_para.paragraph}}</textarea>
+                                                      </div>
+
+                                                      </ng-container>
+                                                      <ng-container *ngIf="sub_section.sub_sub_section.length>0;">
+                                                         <ng-container *ngFor="let sub_sub_section of sub_section.sub_sub_section; let k=index"> 
+                                                         <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sub_sub_section.name}} 
+                                                         <!-- {{"Sub sub section"+sub_sub_section.id}} -->
+                                                         <b class="star">*</b></mat-label>
+                                                         <!-- ss sec {{'k'+k+'j'+j+'i'+i}} -->
+                                                          <!-- <angular-editor  [(ngModel)]="sub_sub_section.sub_sub_section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" ></angular-editor> -->
+
+                                                      <div *ngFor="let sub_sub_section_para of sub_sub_section.sub_sub_section_para">
+                                                         <!-- <angular-editor [(ngModel)]="sub_sub_section_para.paragraph" (keyup)="checkValue1()" [config]="editorConfig" name="sub_sub_section_{{j}}_{{i}}_{{k}}"></angular-editor> -->
+
+                                                         <textarea [(ngModel)]="sub_sub_section_para.paragraph" (keyup)="checkValue1()" name="sub_sub_section_{{j}}_{{i}}_{{k}}" rows="4" cols="100%" [disabled]="isReadonly">{{sub_sub_section_para.paragraph}}</textarea>
+                                                      </div>
+
+                                                      </ng-container>
+                                                      </ng-container>
+                                                   </ng-container>
+                                                </ng-container>
+                                       </div>
+                                      </ng-template>
+                                   </ngb-panel>
+                                 </ngb-accordion>
+                              </div>               
+                            </div>
+
+                         <!-- </ng-template>
+                      </ngb-panel>
+                   </ngb-accordion>
+                </div>
+
+
+               </div> -->
+            </div>
+
+         </div>
+      </div>
+   </form>
+   </div>
+</div>
+
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="activity-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Activity Status</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+               <span aria-hidden="true">&times;</span>
+               </button>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editFormApproval" (ngSubmit)="onSubmitApproval()" >
+            <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="matt-group">
+                        <div class="matt-group">
+                        <mat-label>Status <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <mat-select formControlName="approved_status" placeholder="Select Status" >
+                                 
+                                 <mat-option *ngFor="let global_statuse of global_statuses" [value]="global_statuse.id">{{global_statuse.name}}</mat-option>
+                              </mat-select>
+                           <!-- <mat-error *ngIf="Error('approved_status','required')">Select Status</mat-error> -->
+                        </mat-form-field>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved By <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <input type="text" matInput name="" value="" formControlName="approved_by_name" readonly>
+                              <input placeholder="" type="hidden" formControlName="approved_by">
+                              <mat-error *ngIf="Error('approved_by','required')">Enter Approved By</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved On <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                              <input type="text" matInput name="" value="" formControlName="approved_on" readonly>
+                              <mat-error *ngIf="Error('approved_on','required')">Enter Approved On</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="matt-group">
+                        <mat-label>Remarks <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="approved_remark" [config]="editorConfig" ></angular-editor>
+                     </div>
+                </div>
+            </div>
+            <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+                  <input placeholder="" type="hidden" formControlName="id">
+                  <input placeholder="" type="hidden" formControlName="project">
+                  <button type="submit" class="btn btn-primary" >Save</button>
+                  <button type="button" class="btn btn-outline-primary" #closebuttonapproval data-dismiss="modal" (click)="Approvalclose()">Close</button>
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,14 @@
+.sections-list span{position:absolute;right:0;}
+.sections-list a{display: block;
+    height: 30px;
+    padding: 5px;font-size:12px;}
+.sections-list a:active,.sections-list a:hover,.sections-list a.active{background: #0b014a;color: #FFF;
+}
+
+.unit-list span{position:absolute;right:0;}
+.unit-list a{display: block;
+    height: 30px;
+    padding: 5px;font-size:12px;}
+.unit-list a:active,.unit-list a:hover,.unit-list a.active{background: #0b014a;color: #FFF;
+}
+.compartment-list .comp-scroll .form-check{font-size:12px;}

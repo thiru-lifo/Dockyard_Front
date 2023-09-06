@@ -1,0 +1,232 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>PSR Document Generation</h3>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-right">
+                           
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="container table-options">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <mat-paginator [length]="100" [pageSize]="10"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                        </mat-paginator>
+                     </div>
+                     <div class="col-md-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Search your text here</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" class="search-mat-table" #input >
+                        </mat-form-field>
+                     </div>
+                  </div>
+               </div>
+               <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                 
+                  <ng-container matColumnDef="project">
+                     <th mat-header-cell *matHeaderCellDef><b> Project Name </b></th>
+                     <td mat-cell *matCellDef="let country"> {{country.project.name}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="created_on">
+                     <th mat-header-cell *matHeaderCellDef><b> Created On </b></th>
+                     <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY ')}} </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="freeze" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container  ><b>Freeze</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let country">
+                        <a href="javascript:void(0)" class="edit-icon text-primary"  (click)="onFreeze(country)"><span class="material-icons-outlined">sim_card_download</span></a></td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="download" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container  ><b>Download</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let country">
+                        <a href="javascript:void(0)" class="edit-icon text-primary"  (click)="downloadsection(country.id)"><span class="material-icons-outlined">sim_card_download</span></a></td>
+                  </ng-container>
+                   <ng-container matColumnDef="pdfdownload" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container  ><b>Pdf Download</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let country">
+                        <a href="javascript:void(0)" class="edit-icon text-primary"  (click)="downloadpdf(country.id)"><span class="material-icons-outlined">sim_card_download</span></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="edit" >
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let country">
+                        <a href="javascript:void(0)" data-toggle="modal" xdata-target="#crud-countries" class="edit-icon text-primary" (click)="pdfOption(country)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                  </ng-container>
+                  <ng-container matColumnDef="delete">
+                     <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                     <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country.id)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                  </ng-container>
+                         <ng-container matColumnDef="view" >
+                           <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                           <td class="text-center" mat-cell *matCellDef="let country">
+                              <a href="javascript:void(0)" data-toggle="modal" data-target="#crud-countries-view" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(country)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                        </ng-container>
+                  <ng-container matColumnDef="noData">
+                     <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length" class="norecord">
+                         No Records Found!
+                     </th >
+                   </ng-container>
+                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                   <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource && dataSource.data.length > 0"></tr>
+                   <tr class="mat-row" *matNoDataRow>
+                     <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                  </tr>
+               </table>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-fullscreen cardbody-style1">
+
+      <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()">
+         <div class="modal-content">
+
+            <div class="modal-header">
+               <div class="row">
+                  <div class="col-md-7">
+                     <h5 class="modal-title" id="exampleModalLabel">Document Generation</h5>
+                  </div>
+                  <div class="col-md-5">
+                     <div class="button-group-lg text-right">
+                        <button type="submit" class="btn btn-light" *ngIf="!isReadonly">Download</button>
+                        <button type="button" class="btn btn-light"   #closebutton data-dismiss="modal">Close</button>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            <div class="modal-body form-style-md form-style-font linux">
+               <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+               </div>
+
+               <div class="form-row">               
+                  <div class="col-md-12">
+                     <div class="matt-group">
+                           <angular-editor formControlName="html" [config]="editorConfig" ></angular-editor>
+                           <!-- <mat-error *ngIf="Error('description','required')">Enter description</mat-error> -->
+                           <input hidden formControlName="project_id">
+                     </div>
+                  </div>
+               </div>
+
+            </div>
+
+         </div>
+      </form>
+
+   </div>
+</div>
+
+
+
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries-view" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+    
+         <div class="modal-content">
+               <div class="modal-header">
+                  <div class="row">
+                     <div class="col-md-7">
+                        <h5 class="modal-title" id="exampleModalLabel">Document View</h5>
+                     </div>
+                     <div class="col-md-5">
+                        <div class="button-group-lg text-right">
+                           <!-- <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button> -->
+                              <button type="button" class="btn btn-light"   #closebutton_edit data-dismiss="modal">Close</button>
+                        </div>
+                     </div>
+
+                  </div>
+         </div>
+
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+
+            
+            <div class="col-md-12">
+
+                  <div *ngIf="completePSR">
+                  <div *ngFor="let psr of completePSR">
+                     <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                          <!-- <ngb-panel id="static-b3" title="{{completePSR['submodule']['name']}}"> -->
+                           <ngb-panel id="static-b3" title="{{psr['submodule']['name']}}">
+                             <ng-template ngbPanelContent>
+
+                               <!-- <div *ngFor="let section of completePSR['section'];let i=index"> -->
+                                 <div *ngFor="let section of psr['section'];let i=index">
+                                  <div>
+                                 <ng-container *ngIf="section.view==true">
+                                   <ngb-accordion class="accordion2" [closeOthers]="false" activeIds="static-b3">
+                                      <ngb-panel id="static-b3" title="{{section.name}}">
+                                         <ng-template ngbPanelContent>
+                                            <div class="matt-group">
+
+                                               <ng-container *ngIf="section.subsections.length==0">
+                                                   <span [ngStyle]="{'margin': '10px 0px 10px 0px'}" [innerHTML]="section.paragraph"></span>
+                                                </ng-container>
+
+                                                   <ng-container *ngIf="section.subsections.length>0;">
+                                                      <ng-container *ngFor="let subsections of section.subsections; let j=index">
+                                                       <ng-container *ngIf="subsections.view==true">
+                                                         <mat-label>&nbsp;&nbsp;&nbsp;&nbsp;<b>{{subsections.name}}</b>
+
+                                                         <b class="star">*</b></mat-label>
+                                                         <ng-container *ngIf="subsections.subsubsections.length==0">
+
+                                                            <span [ngStyle]="{'margin': '10px 0px 10px 20px'}" [innerHTML]="subsections.paragraph"></span>
+                                                         </ng-container>
+                                                         <ng-container *ngIf="subsections.subsubsections.length>0;">
+                                                            <ng-container *ngFor="let subsubsections of subsections.subsubsections; let j=index"> 
+                                                               <ng-container *ngIf="subsubsections.view==true">
+                                                            <mat-label >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><u>{{subsubsections.name}}</u></i>
+                                                               
+                                                               <b class="star">*</b></mat-label>
+                                                             <span [ngStyle]="{'margin': '10px 0px 10px 25px'}" [innerHTML]="subsubsections.paragraph"></span>
+                                                         </ng-container>
+                                                         </ng-container>
+                                                         </ng-container>
+                                                      </ng-container>
+                                                   </ng-container>
+                                                </ng-container>
+                                          </div>
+                                         </ng-template>
+                                      </ngb-panel>
+                                    </ngb-accordion>
+                                 </ng-container>
+                                 </div>               
+                               </div>
+
+
+
+                            </ng-template>
+                         </ngb-panel>
+                     </ngb-accordion>
+                     
+                  </div>
+                  </div>
+
+
+
+
+                  <div>
+         </div>
+      </div>
+   
+   </div>
+</div>
+
+

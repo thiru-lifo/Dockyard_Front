@@ -1,0 +1,143 @@
+<header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 col-8 pl-0 hpad">
+                <div class="logo-flex">
+                    <div class="header-left">
+                        <a href="javascript:void(0);" class="menu-icon mobile-menu" (click)=toggleMenu()><span class="material-icons-outlined">menu</span></a>
+                        <div class="header-logo">
+                            <img src="{{ appLogo }}" class="img-fluid" alt="" title="">
+                        </div>
+                    </div>
+                     <div class="breadcrumb-header">
+                    <breadcrumb #parent >
+                        <ul>
+                            <li *ngIf="currentPath!='#/dashboard/admin'" class="breadcrumb-item">
+                              <a href="javascript:void(0)" routerLink="/dashboard/admin" >Dashboard</a>
+                              <span class="material-icons" style="margin:0 5px; position: relative; top: 5px; color: #736D70;">keyboard_arrow_right</span>
+                            </li>
+                            <ng-template ngFor let-route [ngForOf]="parent.breadcrumbs">
+                                <ng-container *ngIf="header!='admin'">
+                                    <li *ngIf="!route.terminal" class="breadcrumb-item">
+                                    <a href="" [routerLink]="[route.url]">{{ route.displayName }}</a>
+                                    <span class="material-icons" style="margin:0 5px; position: relative; top: 5px; color: #736D70;">keyboard_arrow_right</span>
+                                    </li>
+                                </ng-container>
+                                <ng-container *ngIf="header=='admin'">
+
+                                    <li *ngIf="!route.terminal" class="breadcrumb-item">
+                                    <a href="javascript:void(0)" >{{ route.displayName }}</a>
+                                    <span class="material-icons" style="margin:0 5px; position: relative; top: 5px; color: #736D70;">keyboard_arrow_right</span>
+                                    </li>
+                                </ng-container>
+
+                                <li *ngIf="route.terminal" class="" class="breadcrumb-item active" aria-current="page">{{ route.displayName }}</li>
+                            </ng-template>
+                        </ul>
+                    </breadcrumb>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-4">
+                <div class="header-right text-right">
+                    <div class="notify">
+                        <div class="dropdown">
+                            <a href="javascript:void(0)" class="dropdown-toggle notification-icon" id="dropdownNotification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="material-icons-outlined">notifications</span>
+
+                            <span class="badge badge-success notify-count" *ngIf="notificationsList && notificationsList.length>0">{{ notificationsList.length }}</span>
+                            </a>
+                          <div class="dropdown-menu notification-dropdown p-0" aria-labelledby="dropdownNotification">
+                            <div class="list-group">
+                                <ng-container *ngIf="notificationsList.length>0">
+                                    <ng-container *ngFor="let notification of notificationsList">
+                                        <a href="javascript:void(0)" (click)="viewTrialRequest(notification)" class="list-group-item list-group-item-action" aria-current="true">
+                                            <div class="">
+                                              <p class="mb-1">{{ notification.message }}</p>
+                                              <p class="hmnotify-date">{{ moment(notification.created_on).fromNow() }}</p>
+                                            </div>
+                                          </a>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="notificationsList.length==0">
+                                    <a href="javascript:void(0)" class="list-group-item no-notification p-0" aria-current="true">
+                                        <img src="assets/images/no-alarm.png" style="width:100%;" class="img-fluid" alt="" title="">
+                                      </a>
+                                </ng-container>
+                            </div>
+                          </div>
+                      </div>
+
+                    </div>
+                    <div class="profile-drop">
+                      <div class="dropdown">
+                          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="assets/images/ship.png" class="img-fluid" alt="" title="">
+                            <span class="text-white" style="font-size:13px;">&nbsp;&nbsp;{{ api.userid.first_name+' '+api.userid.last_name }}
+                                <span >({{ api.userid.role_name }})</span>
+                            </span>
+                          </button>
+
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <!-- <a class="dropdown-item" href="#">My Profile</a> -->
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#change-password">Change Password</a>
+                            <a href="javascript:void(0)" class="dropdown-item" (click)="logout()">Logout</a>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- modal Change Password -->
+<div class="modal fade master-modal-style" id="change-password" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Change Password?</h5>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+                <p>Please enter your old password, for security’s sake, and then enter your new password twice so we can verify you typed it in correctly.</p>
+                <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+                </div>
+                <form [formGroup]="changePasswordForm" (ngSubmit)="onSubmit()">
+                <div class="form-group-label">
+                  <mat-label>Old password <b class="star">*</b></mat-label>
+                  <mat-form-field appearance="legacy">
+                    <input matInput placeholder="" type="password" formControlName="old_password">
+                    <mat-error *ngIf="changePasswordForm.controls['old_password'].hasError('required')">Enter old password</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group-label">
+                  <mat-label>New password <b class="star">*</b></mat-label>
+                  <mat-form-field appearance="legacy">
+                    <input matInput placeholder="" type="password" formControlName="new_password">
+                    <mat-error *ngIf="changePasswordForm.controls['new_password'].hasError('required')">Enter new password</mat-error>
+                    <mat-error *ngIf="changePasswordForm.controls['new_password'].hasError('pattern')">Please enter a minimum of eight characters (atleast one uppercase, lowercase and one number)</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="form-group-label">
+                  <mat-label>New password confirmation <b class="star">*</b></mat-label>
+                  <mat-form-field appearance="legacy">
+                    <input matInput placeholder="" type="password" formControlName="new_password2">
+                    <mat-error *ngIf="changePasswordForm.controls['new_password2'].hasError('required')">Enter confirm password</mat-error>
+                    <mat-error *ngIf="changePasswordForm.controls['new_password2'].hasError('mustMatch')">Password and confirm not match</mat-error>
+                  </mat-form-field>
+                </div>
+                <!-- <div class="mt-2">
+                    <button mat-raised-button color="primary" class="w-100" routerLink="/authenticate/security-pin">Send</button>
+                </div> -->
+                <div class="form-row button-group-lg button-auto mt-2">
+                   <div class="col-md-6 col-6">
+                      <button type="submit" class="btn btn-primary w-100">Save</button>
+                   </div>
+                   <div class="col-md-6 col-6">
+                    <button type="button" input type="reset" value="Reset" class="btn btn-outline-primary w-100" #closebutton data-dismiss="modal" (click)="close()">Cancel</button>
+                   </div>
+                </div>
+                </form>
+            </div>
+      </div>
+   </div>
+</div>

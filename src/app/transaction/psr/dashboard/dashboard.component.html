@@ -1,0 +1,254 @@
+`<section class="body-card">
+  <div class="container-fluid">
+    <div class="row d-flex align-items-center form-style-md">
+      <div class="col-md-6">
+        <div class="heading-style3">
+          <h3>Dashboard</h3>
+        </div>
+        <div class="text-right btn btn-light"><a href="#" routerLink="/transaction/psr/project-list">Back</a></div>
+      </div>
+      <div class="col-md-6">
+        
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="timeline-cover timeline-cover-2">
+          <img src="assets/images/warship-timeline-1.jpg" class="img-fluid bg-image" alt="" title="">
+
+            <!-- <ul class="timeline">
+              <ng-container *ngFor="let psr of dataProjectDetail['psr_list']; let i = 'index+1'">
+                <li [ngClass]="psr['project_module_master'].id==i && psr['status']==2? 'active' : ''">
+                  <p>{{psr['project_module_master'].display_name}} </p>
+                </li>
+              </ng-container>
+            </ul> -->
+
+
+            <!-- <ul class="timeline">
+              <ng-container *ngFor="let item of dataProjectDetail['all_psr_list']; let i = 'index+1'">
+                <ng-container *ngFor="let psr of dataProjectDetail['psr_list']; let j = 'index+1'">
+                  <li [ngClass]="psr['project_module_master'].id==i && psr['status']==2? 'active' : ''">
+                
+                  <div class="icon">
+                    <img src="assets/images/battleship.png">
+                  </div>
+                  <p>{{item['display_name']}} </p>
+                </li>
+                </ng-container>
+              </ng-container>
+            </ul> -->
+
+          <ul class="timeline">
+              <li 
+              *ngIf = "dataProjectDetail['psr_list']; else initiation" 
+
+              [ngClass]="(dataProjectDetail['psr_list'][0]['project_module_master']['id']==1 && dataProjectDetail['psr_list'][0]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Initiation Notes </p>
+            </li>
+            <ng-template #initiation>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Initiation Notes </p>
+              </li>
+            </ng-template>
+
+            <li 
+            *ngIf = "dataProjectDetail['psr_list']; else formulation" 
+
+            [ngClass]="(dataProjectDetail['psr_list'][1]['project_module_master']['id']==2 && dataProjectDetail['psr_list'][1]['status']==2) ? 'active' : ''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Formulation of approach paper</p>
+            </li>
+
+            <ng-template #formulation>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Formulation of approach paper </p>
+              </li>
+            </ng-template>
+
+            <li 
+            *ngIf = "dataProjectDetail['psr_list']; else presentation" 
+            [ngClass]="(dataProjectDetail['psr_list'][2]['project_module_master']['id']==3 && dataProjectDetail['psr_list'][2]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Presentation of approach paper</p>
+            </li>
+            <ng-template #presentation>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Presentation of approach paper</p>
+              </li>
+            </ng-template>
+
+
+            <li 
+              *ngIf = "dataProjectDetail['psr_list']; else isr" 
+              [ngClass]="(dataProjectDetail['psr_list'][3]['project_module_master']['id']==4 && dataProjectDetail['psr_list'][3]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Input of Staff Requirements</p>
+            </li>
+            <ng-template #isr>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Input of Staff Requirements</p>
+              </li>
+            </ng-template>
+
+            <li 
+            *ngIf = "dataProjectDetail['psr_list']; else concept" 
+            [ngClass]="(dataProjectDetail['psr_list'][4]['project_module_master']['id']==5 && dataProjectDetail['psr_list'][4]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Concept Design</p>
+            </li>
+            <ng-template #concept>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Concept Design</p>
+              </li>
+            </ng-template>
+
+            <li 
+            *ngIf = "dataProjectDetail['psr_list']; else incorporation" 
+            [ngClass]="(dataProjectDetail['psr_list'][5]['project_module_master']['id']==6 && dataProjectDetail['psr_list'][5]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Incorporation of design inputs </p>
+            </li>
+            <ng-template #incorporation>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Incorporation of design inputs</p>
+              </li>
+            </ng-template>
+
+
+            <li 
+            *ngIf = "dataProjectDetail['psr_list']; else receipt" 
+            [ngClass]="(dataProjectDetail['psr_list'][6]['project_module_master']['id']==7 && dataProjectDetail['psr_list'][6]['status']==2)  ? 'active':''">
+              <div class="icon">
+                <img src="assets/images/battleship.png">
+              </div>
+              <p>Receipt of RFI Responses</p>
+            </li>
+            <ng-template #receipt>
+              <li>
+                <div class="icon">
+                  <img src="assets/images/battleship.png">
+                </div>
+                <p>Receipt of RFI Responses</p>
+              </li>
+            </ng-template>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row card-hg1 mt-1">
+      <div class="col-md-6">
+       <ngb-accordion class="range-accordion" [closeOthers]="true" activeIds="static-a1">
+          <ngb-panel id="static-a1" title="Recent Notifications">
+            <ng-template ngbPanelContent>
+              <ng-container *ngIf="notificationsList.length==0">
+
+                                    <a href="javascript:void(0)" class="list-group-item no-notification p-0" aria-current="true">
+                                        <img src="assets/images/no-alarm.png" style="width:100%;" class="img-fluid" alt="" title="">
+                                      </a>
+                                </ng-container>
+              <ng-container>
+              <div class="notification-box">
+                <!-- Start -->
+              
+                <ng-container *ngIf="notificationsList.length>0">
+                  <ng-container *ngFor="let notification of notificationsList">
+                  <div class="notification-row">
+                    <div class="notify-icon">
+                      <span class="material-icons">notifications_none</span>
+                    </div>
+                    <div class="notify-content">
+                      <a href="javascript:void(0)" class="" aria-current="true">
+                       <p class="mb-1">{{ notification.message }}</p>
+                                              <p class="hmnotify-date">{{ moment(notification.created_on).fromNow() }}</p>
+                        </a>
+                    </div>
+                  </div>
+                </ng-container>
+
+                
+                </ng-container>
+                  <!-- End -->
+ 
+               </div>
+              </ng-container>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+      <div class="col-md-6">
+        <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+          <ngb-panel id="static-b3" title="Timeline Reports">
+             <ng-template ngbPanelContent>   
+              <ng-container *ngIf="timelineDet.length>0">
+                <table class="table table-bordered table-custom mat-elevation-z8" >
+                  <thead>
+                    <tr>
+                        <th>Sub Mobule</th>
+                        <th>Targetted Completion</th>
+                        <th>Actual Completion</th>
+                        <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let timelin of timelineDet;">
+                      <tr>
+                          <td>{{ timelin.name }}</td>
+                          <td>{{ timelin.sProjDet?(timelin.sProjDet.project__project_type__code=='MODERATE'?timelin.targetted_month_moderate:timelin.targetted_month_complex):'0' }}</td>
+                          <td>{{ timelin.sProjDet?timelin.sProjDet.months:'-' }}</td>
+                          <td><span class="badge rounded-pill  {{ timelin.warningStatus }}">{{ timelin.completionStatus?timelin.completionStatus:'-' }}</span></td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                  
+               </table>
+              </ng-container>              
+              <ng-container *ngIf="timelineDet.length==0">
+                <div class="alert alert-danger text-center" role="alert">
+                  No data found
+                </div>
+              </ng-container>
+             </ng-template>
+             
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+
+     </div>
+
+  </div>
+</section>
+

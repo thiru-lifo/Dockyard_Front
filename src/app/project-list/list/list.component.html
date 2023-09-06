@@ -1,0 +1,257 @@
+<!-- <section class="body-card">
+    <div class="container-fluid">
+         <div class="card-list-gird">
+            <div class="card">
+                <div class="card-header header-button bigfont">
+                    Project List <a href="#" routerLink="/transaction/psr/initiation-notes" class="round-btn"><span class="material-icons-outlined">add</span></a>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-md-6" *ngFor="let project of projectList">
+                        <div class="card project-card" routerLink="/dashboard/admin" [queryParams]="{project_id: project.project.id}">
+                            <a>{{project.project.name}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</section> -->
+
+
+
+<div>
+    
+<section class="body-card">
+  <div class="container-fluid">
+    <div class="row d-flex align-items-center form-style-md">
+      <div class="col-md-6">
+        <div class="heading-style3">
+          <h3>Dashboard</h3>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="matt-group  matt-select-multi1">
+          <mat-form-field appearance="fill">
+            <mat-select placeholder="Choose widgets" multiple (selectionChange)="onChangeWidget()" [(ngModel)]="custom_dashboard">
+              <mat-option value="psr-count" selected>PSR</mat-option>
+              <mat-option value="gls-count" selected>GLS</mat-option>
+              <mat-option value="bls-count">BS</mat-option>
+              <mat-option value="sotr-count">SOTR</mat-option>
+              <mat-option value="dfr-count">DFR</mat-option>
+              <mat-option value="pnd-count">PND</mat-option>
+              <mat-option value="d787-count">D787</mat-option>
+              <mat-option value="gd-count">GD</mat-option>
+              <mat-option value="project-list">Projects</mat-option>
+
+
+              <!-- <mat-option value="KPI1">KPI 1</mat-option>
+              <mat-option value="KPI2">KPI 2</mat-option>
+              <mat-option value="KPI3">KPI 3</mat-option>
+              <mat-option value="KPI4">KPI 4</mat-option>
+              <mat-option value="KPI5">KPI 5</mat-option>
+              <mat-option value="KPI6">KPI 6</mat-option>
+              <mat-option value="KPI7">KPI 7</mat-option>
+              <mat-option value="KPI8">KPI 8</mat-option>
+              <mat-option value="KPI9">KPI 9</mat-option>
+              <mat-option value="KPI10">KPI 10</mat-option>
+              <mat-option value="KPI11">KPI 11</mat-option>
+              <mat-option value="KPI12">KPI 12</mat-option>
+              <mat-option value="KPI13">KPI 13</mat-option>
+              <mat-option value="KPI14">KPI 14</mat-option>
+              <mat-option value="KPI15">KPI 15</mat-option>
+              <mat-option value="KPI16">KPI 16</mat-option>
+              <mat-option value="KPI17">KPI 17</mat-option>
+              <mat-option value="KPI18">KPI 18</mat-option>
+              <mat-option value="KPI19">KPI 19</mat-option>
+              <mat-option value="KPI20">KPI 20</mat-option> -->
+           </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="form-row content-big-round fontbig">
+      <div class="col-md-3" *ngIf="checkWidgetExists('psr-count')">
+        <div class="content-box bg1 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+            <img src="assets/images/units.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>PSR</p>
+            <h3>{{all_psr_active_count > 0 ? all_psr_active_count : 0}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="checkWidgetExists('gls-count')">
+        <div class="content-box bg2 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+           <img src="assets/images/satellite.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>GLS</p> 
+            <h3>{{all_gls_active_count > 0 ? all_gls_active_count : 0}}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="checkWidgetExists('bls-count')">
+        <div class="content-box bg3 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+           <img src="assets/images/ship.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <p>BS</p>
+            <h3>{{all_bls_active_count > 0 ? all_bls_active_count : 0}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3" *ngIf="checkWidgetExists('sotr-count')">
+       <div class="content-box bg4 d-flex align-items-center content-big-box">
+         <div class="left-icon">
+          <img src="assets/images/equipments.png" alt="" title="">
+         </div>
+         <div class="content-right">
+           <p>SOTR</p>
+           <h3>0</h3>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-md-3" *ngIf="checkWidgetExists('dfr-count')">
+       <div class="content-box bg6 d-flex align-items-center content-big-box">
+         <div class="left-icon">
+          <img src="assets/images/trial2.png" alt="" title="">
+         </div>
+         <div class="content-right">
+           <p>DFR</p>
+           <h3>0</h3>
+         </div>
+       </div>
+     </div>
+
+     <div class="col-md-3" *ngIf="checkWidgetExists('pnd-count')">
+      <div class="content-box bg5 d-flex align-items-center content-big-box">
+        <div class="left-icon">
+         <img src="assets/images/trial2.png" alt="" title="">
+        </div>
+        <div class="content-right">
+          <p>B&amp;D</p>
+          <h3>0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="checkWidgetExists('d787-count')">
+      <div class="content-box bg3 d-flex align-items-center content-big-box">
+        <div class="left-icon">
+         <img src="assets/images/trial2.png" alt="" title="">
+        </div>
+        <div class="content-right">
+          <p>D787</p>
+          <h3>0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3" *ngIf="checkWidgetExists('gd-count')">
+      <div class="content-box bg1 d-flex align-items-center content-big-box">
+        <div class="left-icon">
+         <img src="assets/images/trial2.png" alt="" title="">
+        </div>
+        <div class="content-right">
+          <p>GD</p>
+          <h3>0</h3>
+        </div>
+      </div>
+    </div>
+
+
+
+    </div>
+
+
+    <div class="" *ngIf="checkWidgetExists('project-list')">
+      <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+         <ngb-panel id="static-b3" title="Projects">
+
+            <ng-template ngbPanelContent>
+                <!-- <div class="card-header header-button bigfont float-right"><a href="#" routerLink="/transaction/psr/initiation-notes" class="round-btn"><span class="material-icons-outlined">add</span></a></div> -->
+                <div class="add-right">
+                <a href="#" routerLink="/masters/projects"><span class="material-icons">add</span></a>
+              </div>
+                <div class="row">
+                  <div class="col-sm-4"  *ngFor="let project of projectList">
+                    <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                      <div class="card-body">
+                        <h5 class="card-title">{{project.project[0]['name']}}</h5>
+                        <p class="card-text">Class: {{project.project[0]['class_id']['name']}}</p>
+                        
+                        &nbsp;
+                       
+                        &nbsp;
+                        <a href="#" class="btn btn-primary" routerLink="/dashboard/admin" [queryParams]="{project_id: project.project[0]['id']}">View Detail</a>
+                        &nbsp;&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary"  (click)="getProjectLog(project.project[0]['id'])" >View Log</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </ng-template>
+            
+         </ngb-panel>
+       </ngb-accordion>
+      
+    </div>
+    <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+      <ngb-panel id="static-b3" title="Module Details">
+        <ng-template ngbPanelContent>
+    <div class="card-body mt-n10">
+      <div id="chartdivModule" style="width: 100%; height: 450px"></div>
+      
+    </div>
+   </ng-template>
+   </ngb-panel>
+   </ngb-accordion>
+  </div>
+
+</section>
+</div>
+<div class="modal fade master-modal-style" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Project Log</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+              <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+          <div class="container mt-5 mb-5">
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Project Log</h4>
+                <div *ngFor="let role of projectlog" >
+                  
+                <ul class="timeline">
+                 
+                  
+                  <li>
+                    <a  href="javascript:void(0)">{{role.project.name}}</a>
+                    <a href="javascript:void(0)" class="float-right">{{moment(role.created_on).format('DD-MM-YYYY')}} </a>
+                    <p>{{role.msg}}</p>
+                  </li>      
+                </ul>
+              </div>
+              </div>
+            </div>
+        </div>
+     </div>
+  </div>
+</div>
+
+

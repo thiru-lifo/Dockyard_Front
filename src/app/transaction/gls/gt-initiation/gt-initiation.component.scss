@@ -1,0 +1,44 @@
+.project-relative a {position:absolute;right:10px;}
+
+.mat-table {
+ width: 100%;
+ max-width: 100%;
+ margin-bottom: 1rem;
+ display: table;
+ border-collapse: collapse;
+ margin: 0px;
+}
+
+.mat-row,
+.mat-header-row {
+ display: table-row !important;
+}
+
+.button-sticky{
+  position:fixed;
+  overflow:hidden;
+  background-color:#FFF;
+  top:30px;
+  right:15px;
+}
+.mat-cell,
+.mat-header-cell {
+ word-wrap: initial !important;
+ display: table-cell;
+ padding: 0px 5px;
+ line-break: unset;
+ white-space: nowrap !important;
+ overflow: hidden;
+ vertical-align: middle;
+}
+.mat-column-visa_number{width:150px !important;}
+.mat-column-location{width:120px !important;}
+.modal-fullscreen {
+    width: 100vw;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+}
+.acq-subsection .form-row,.acq-subsection .mat-form-field-type-mat-select{
+      margin: 0 25px !important;
+}

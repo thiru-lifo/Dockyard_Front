@@ -1,0 +1,232 @@
+<div>
+   <div class="card card-gray" >
+      <div class="card-header system_comp_equi icon-right-2">
+         <!-- {{fromParent|json}}
+         {{fromParentValue|json}} -->
+         <!-- {{fromParentProjectId}} -->
+         <!-- {{pType}} -->
+         {{title}}
+         <div class="icon-group-2">
+            <ul>
+               <li><a href="javascript:void(0)" (click)="addMoreSystem1(fromParent, fromParentProjectId)"><span class="material-icons-outlined">add</span></a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="card-body table-responsive">
+         <table class="table table-bordered table-input-length">
+            <thead>
+               <tr>
+                  <th>Ser</th>
+                  <th>Name</th>
+                  <th>Numbers</th>
+                  <th>Capabilities / Feature </th>
+                  <th>Weight, Volume and Power Consumption </th>
+                  <th>Location</th>
+                  <th>Interface</th>
+                  <th>Procurement Router</th>
+                  <th>Vendor</th>
+                  <th>Cost</th>
+                  <th>Standards</th>
+                  <th>Sustenance</th>
+                  <th>Action</th>
+               </tr>
+            </thead>
+            <tbody>
+               <ng-container [formGroup]="docFormSystem1" *ngIf="docFormSystem1">
+                  <ng-container formArrayName="itemsSystem1" *ngFor="let itemSystem of docFormSystem1.get('itemsSystem1')['controls']; let s = index;">
+                     <ng-container [formGroupName]="s">
+                     <tr>
+                        <td>
+                           <div class="form-group">
+
+                              <input type="hidden" formControlName="project_id" id="project_id">
+                              <input type="hidden" formControlName="global_section_id" id="global_section_id">
+                              <input type="hidden" formControlName="global_sub_section_id" id="global_sub_section_id">
+                              <input type="hidden" formControlName="global_sub_sub_section_id" id="global_sub_sub_section_id">
+                              <input matInput formControlName="s_ser" id="s_ser" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td width="15%">
+                           <div class="form-group">
+                              <mat-select formControlName="s_name" placeholder="Select name"  (selectionChange)="onSelectCh()">
+                                <mat-option *ngFor="let item of fromParent" [value]="item.name">{{item.name}}</mat-option>
+                              </mat-select>
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <input matInput formControlName="s_numbers" id="s_numbers" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <input matInput formControlName="s_capabilities_feature" id="s_capabilities_feature" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <input matInput formControlName="s_weight_volume_power_consumption" id="s_weight_volume_power_consumption" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <input matInput formControlName="s_location" id="s_location" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_interface" id="s_interface" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_interface" id="s_interface" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_procurement_router" id="s_procurement_router" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_procurement_router" id="s_procurement_router" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_vendor" id="s_vendor" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_vendor" id="s_vendor" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_cost" id="s_cost" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_cost" id="s_cost" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_standards" ib="s_standards" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_standards" ib="s_standards" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <div class="form-group">
+                              <!-- <input matInput formControlName="s_sustenance" id="s_sustenance" [(ngModel)]='fromParent.system.paragraph'> -->
+                              <input matInput formControlName="s_sustenance" id="s_sustenance" (keyup)="keyPress()">
+                           </div>
+                        </td>
+                        <td>
+                           <a href="javascript:void(0)" (click)="removeItemSystem1(s)" class="text-danger icon-single"><span class="material-icons-outlined">delete</span></a>
+                        </td>
+                     </tr>
+                  </ng-container>
+               </ng-container>
+            </ng-container>
+
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+
+
+<!-- <div>
+   <div class="card card-gray" >
+      <div class="card-header icon-right-2">
+         Child System1 {{fromParent|json}}
+         <div class="icon-group-2">
+            <ul>
+               <li><a href="javascript:void(0)" (click)="addNewSystemEquipment()"><span class="material-icons-outlined">add</span></a></li>
+            </ul>
+         </div>
+      </div>
+      <div class="card-body table-responsive">
+         <table class="table table-bordered table-input-length">
+            <thead>
+               <tr>
+                  <th>Ser</th>
+                  <th>Name</th>
+                  <th>Numbers</th>
+                  <th>Capabilities / Feature </th>
+                  <th>Weight, Volume and Power Consumption</th>
+                  <th>Location</th>
+                  <th>Interface</th>
+                  <th>Procurement Router</th>
+                  <th>Vendor</th>
+                  <th>Cost</th>
+                  <th>Standards</th>
+                  <th>Sustenance</th>
+                  <th>Action</th>
+               </tr>
+            </thead>
+            <tbody>
+               <ng-container *ngFor="let value of system_equipment; let in = index">
+                  <tr>
+                     <td>
+                        <div class="form-group">
+                           {{in}}
+
+                           <input matInput [(ngModel)]='fromParent.system.paragraph'>
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+
+                        <input matInput>
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_numbers" ib="s_numbers">
+
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_location" ib="s_location">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_equipment" ib="s_equipment">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_features" ib="s_features">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_layout" ib="s_layout">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_special_requirements" ib="s_special_requirements">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_standards" ib="s_standards">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_special_requirements" ib="s_special_requirements">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_standards" ib="s_standards">
+                        </div>
+                     </td>
+                     <td>
+                        <div class="form-group">
+                           <input matInput name="s_standards" ib="s_standards">
+                        </div>
+                     </td>
+                     <td>
+                           <a href="javascript:void(0)" (click)="removeItems(in)" class="text-danger icon-single"><span class="material-icons-outlined">delete</span></a>
+                     </td>
+                  </tr>
+               </ng-container>
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div> -->

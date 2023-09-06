@@ -1,0 +1,1133 @@
+<section class="body-card">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-md-12">
+            <div class="card">
+               <div class="card-header">
+                  <div class="row">
+                     <div class="col-md-6">
+                        <h3>Formulation of Approach Paper</h3>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="text-right">
+                           <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary btn-round-sm" (click)="add()" >Add</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="tabs-external tabstyle2">
+                      <div class="container table-options">
+                         <div class="row">
+                            <div class="col-md-6">
+                               <mat-paginator [pageSize]="10" #paginationPending="matPaginator"
+                               [length]="this.dataSourcePending?.filteredData?.length"  [pageSizeOptions]="[10,20,30,50,100]" aria-label="Select page" >
+                               </mat-paginator>
+                            </div>
+                            <div class="col-md-6">
+                               <mat-form-field appearance="standard">
+                                   <mat-label>Search your text here</mat-label>
+                                   <input matInput (keyup)="applyFilterPending($event)" class="search-mat-table" #input >
+                               </mat-form-field>
+                            </div>
+                         </div>
+                      </div>
+
+
+                      <div class="table-responsive">
+                       <table mat-table [dataSource]="dataSourcePending" class="mat-elevation-z8">
+                         <ng-container matColumnDef="project">
+                          <th mat-header-cell *matHeaderCellDef ><b> Project Name </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.project.name}} </td>
+                       </ng-container>
+                         <!-- <ng-container matColumnDef="intoduction">
+                          <th mat-header-cell *matHeaderCellDef ><b> Introduction </b></th>
+                          <td mat-cell *matCellDef="let country"><ng-container >  <div [innerHTML]="country.intoduction"> </div></ng-container></td>
+                       </ng-container> -->
+
+                       <!-- <ng-container matColumnDef="man_power">
+                          <th mat-header-cell *matHeaderCellDef><b> Manpower </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.man_power}} </td>
+                       </ng-container>
+                       <ng-container matColumnDef="list_of_major_compartments">
+                          <th mat-header-cell *matHeaderCellDef><b> List of Major Compartments </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.list_of_major_compartments}} </td>
+                       </ng-container>
+                       <ng-container matColumnDef="dimensions">
+                          <th mat-header-cell *matHeaderCellDef><b> Dimensions, Tonnage and Hull Form </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.dimensions}} </td>
+                       </ng-container>
+                       <ng-container matColumnDef="remarks">
+                          <th mat-header-cell *matHeaderCellDef><b> Remarks </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.remarks}} </td>
+                       </ng-container> -->
+                       <ng-container matColumnDef="requested_by">
+                          <th mat-header-cell *matHeaderCellDef><b> Requested By </b></th>
+                          <td mat-cell *matCellDef="let country"> {{country.created_by.first_name+' '+country.created_by.last_name}} </td>
+                       </ng-container>
+                       <ng-container matColumnDef="requested_on">
+                          <th mat-header-cell *matHeaderCellDef><b> Requested On </b></th>
+                          <td mat-cell *matCellDef="let country"> {{moment(country.created_on).format('DD-MM-YYYY hh:mm A')}} </td>
+                       </ng-container>
+                       <ng-container matColumnDef="email">
+                          <th mat-header-cell *matHeaderCellDef><b> Email </b></th>
+                          <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal" (click)="senEmail(country)"><span class="material-icons">email</span></a> </td>
+                       </ng-container>
+                       <ng-container matColumnDef="approval">
+                          <th mat-header-cell *matHeaderCellDef><b> Approval </b></th>
+                          <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#activity-modal" (click)="approval(country)"><span class="material-icons" [ngStyle]="{'color':country.approved_status == 2 ? 'green' : ''}">check_box</span></a> </td>
+                       </ng-container>
+                       <ng-container matColumnDef="upload">
+                          <th mat-header-cell *matHeaderCellDef><b> Upload </b></th>
+                          <td mat-cell *matCellDef="let country"> <a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal" (click)="document(country)"><span class="material-icons">drive_folder_upload</span></a> </td>
+                       </ng-container>
+                       <ng-container matColumnDef="responsibility" >
+                          <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container><b>Responsibility</b></ng-container></th>
+                          <td class="text-center" mat-cell *matCellDef="let country">
+
+                             <a href="#" data-toggle="modal" data-target="#responsibility-modal" class="edit-icon text-primary" (click)="onResponsibilityLoad(country)"><span class="material-icons-outlined">checklist</span></a>
+
+
+                             <!-- <a href="#" data-toggle="modal" data-target="#responsibility-modal" class="edit-icon text-primary"(click)=" edit(country.project.id)"><span class="material-icons-outlined">checklist</span></a> -->
+                            </td>
+                          </ng-container>
+
+                       <ng-container matColumnDef="view" >
+                          <th class="text-center" mat-header-cell *matHeaderCellDef >
+                            <ng-container *ngIf="permission.view==true" ><b>View</b></ng-container></th>
+                            <td class="text-center" mat-cell *matCellDef="let country">
+                             <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" *ngIf="permission.view==true" (click)="onView(country)"><span class="material-icons-outlined">remove_red_eye</span></a></td>
+                       </ng-container>
+                       <ng-container matColumnDef="edit" >
+                          <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.edit==true" ><b>Edit</b></ng-container></th>
+                          <td class="text-center" mat-cell *matCellDef="let country">
+                             <a href="#" data-toggle="modal" data-target="#crud-countries" class="edit-icon text-primary" (click)="editOption(country)" *ngIf="permission.edit==true" ><span class="material-icons-outlined">edit</span></a></td>
+                       </ng-container>
+                       <ng-container matColumnDef="delete">
+                          <th class="text-center" mat-header-cell *matHeaderCellDef ><ng-container *ngIf="permission.delete==true"><b>Delete</b></ng-container></th>
+                          <td class="text-center" mat-cell *matCellDef="let country"><a href="javascript:void(0)" class="edit-icon text-danger" (click)="onDelete(country)" *ngIf="permission.delete==true" ><span class="material-icons-outlined">delete</span></a></td>
+                       </ng-container>
+                       <ng-container matColumnDef="noData">
+                          <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsPending.length" class="norecord">
+                              No Records Found!
+                          </th >
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumnsPending"></tr>
+                        <ng-container *ngIf="dataListPending.length>0">
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsPending;"></tr>
+                         </ng-container>
+                        <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSourcePending && dataSourcePending.data.length > 0"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                          <td *ngIf='filterValue' class="norecord"  colspan="4"><b>No data matching with "{{input.value}}"</b></td>
+                       </tr>
+                    </table>
+                    </div>
+
+             </div>
+
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- modal -->
+<div class="modal fade master-modal-style modalhg-xl modal-header-sticky" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl cardbody-style1">
+<form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" >
+      <div class="modal-content">
+         <div class="modal-header">
+            <div class="row">
+               <div class="col-md-7">
+                  <h5 class="modal-title" id="exampleModalLabel">{{crudName}} Formulation of Approach Paper</h5>
+               </div>
+               <div class="col-md-5">
+                  <div class="button-group-lg text-right">
+                     <button type="submit" class="btn btn-light" *ngIf="!isReadonly" >{{crudName}}</button>
+                        <button type="button" class="btn btn-light" #closebutton data-dismiss="modal" (click)="onclose()">Close</button>
+                  </div>
+               </div>
+
+            </div>
+
+
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <!-- <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" > -->
+
+            <!-- <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >{{crudName}}</button>
+                  <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Close</button>
+               </div>
+            </div> -->
+
+            <div class="form-row">
+               <div class="col-md-12">
+                   <div class="matt-group project-relative">
+                       <mat-label>Select Project <b class="star">*</b> </mat-label>
+                       <mat-form-field appearance="legacy">
+                             <mat-select formControlName="project" placeholder="Select Project" (selectionChange)="onProjectHandler($event.value)" [disabled]="pro">
+                             <mat-option>None</mat-option>
+                             <mat-option *ngFor="let project of FinalArray" [value]="project.project__id">{{project.project__name}}</mat-option>
+                             </mat-select>
+                          <!-- <mat-error *ngIf="Error('project','required')">Select Project</mat-error> -->
+                       </mat-form-field>
+                   </div>
+               </div>
+               <div class="col-md-12">
+                 <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                    <ngb-panel id="static-b3" title="Remarks">
+                       <ng-template ngbPanelContent>
+                          <div class="matt-group">
+                             <mat-label>Remarks <b class="star">*</b></mat-label>
+                             <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                         </div>
+                       </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+               </div>
+               <div class="col-md-12">
+                 <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                    <ngb-panel id="static-b3" title="Introduction">
+                       <ng-template ngbPanelContent>
+                          <div class="matt-group">
+                             <mat-label>Introduction <b class="star">*</b></mat-label>
+                             <angular-editor formControlName="intoduction" [config]="editorConfig" ></angular-editor>
+                         </div>
+                       </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+               </div>
+               <div class="col-md-12">
+                 <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                    <ngb-panel id="static-b3" title="Critical Design Driver">
+                       <ng-template ngbPanelContent>
+                          <div class="matt-group">
+                             <mat-label>Critical Design Driver <b class="star">*</b></mat-label>
+                             <angular-editor formControlName="critical_design_driver" [config]="editorConfig" ></angular-editor>
+                         </div>
+                       </ng-template>
+                    </ngb-panel>
+                  </ngb-accordion>
+               </div>
+
+                <div class="col-md-12">
+                 <hr/>
+                   <p class="sub-label3">Capabilities</p>
+                   <div class="form-row capabilities-row">
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Weapons and Sensors">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                       <!-- <ul>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                       </ul> -->
+                                      </div>
+                                      <mat-label>Weapons and Sensors <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="weapons_and_sensors" [config]="editorConfig" ></angular-editor>
+                                  </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Composite Communication Capability">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                      </div>
+                                      <mat-label>Composite Communication Capability  <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="composite_communication_capability" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Flag Platform ">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Flag Platform  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="flag_platform" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Speed and Endurance ">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                      </div>
+                                      <mat-label>Speed and Endurance  <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="speed_and_endurance" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Operations Cycle ">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Operations Cycle  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="operations_cycle" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Stealth">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                      </div>
+                                      <mat-label>Stealth <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="stealth" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Redundancy">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Redundancy <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="redundancy" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Aviation">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                      </div>
+                                      <mat-label>Aviation <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="aviation" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Autonomous Systems">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Autonomous Systems  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="autonomous_systems" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="UNREP">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>UNREP <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="unrep" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Survivability">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Survivability <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="survivability" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Medical and HADR facilities">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                      </div>
+                                      <mat-label>Medical and HADR facilities  <b class="star">*</b></mat-label>
+                                      <angular-editor formControlName="medical_and_hadr_facilities" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Boats and Landing Craft">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Boats and Landing Craft  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="boats_and_landing_craft" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Upper Deck Equipment">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Upper Deck Equipment  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="upper_deck_equipment" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Habitability">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Habitability <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="habitability" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="NBCD Compliance">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>NBCD Compliance  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="nbcd_compliance" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+                       <div class="col-md-12">
+                          <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                             <ngb-panel id="static-b3" title="Special Capabilities ">
+                                <ng-template ngbPanelContent>
+                                   <div class="matt-group icon-right-2">
+                                      <div class="icon-group-2">
+                                         <!-- <ul>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                         </ul> -->
+                                        </div>
+                                       <mat-label>Special Capabilities  <b class="star">*</b></mat-label>
+                                       <angular-editor formControlName="special_capabilities" [config]="editorConfig" ></angular-editor>
+                                   </div>
+                                </ng-template>
+                             </ngb-panel>
+                           </ngb-accordion>
+                       </div>
+
+                       <div class="col-md-12">
+                        <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+                           <ngb-panel id="static-b3" title="Manpower ">
+                              <ng-template ngbPanelContent>
+                                 <div class="matt-group icon-right-2">
+                                    <div class="icon-group-2">
+                                       <!-- <ul>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#email-modal"><span class="material-icons-outlined">email</span></a></li>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#assign-modal"><span class="material-icons-outlined">fact_check</span></a></li>
+                                          <li><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal"><span class="material-icons-outlined">file_upload</span></a></li>
+                                       </ul> -->
+                                      </div>
+                                     <mat-label>Manpower  <b class="star">*</b></mat-label>
+                                     <angular-editor formControlName="manpower" [config]="editorConfig" ></angular-editor>
+                                 </div>
+                              </ng-template>
+                           </ngb-panel>
+                         </ngb-accordion>
+                     </div>
+                   </div>
+                </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                 <p class="sub-label2">List of Major Compartments</p>
+              </div>
+              <div class="col-md-12">
+                 <div class="matt-group">
+                    <mat-label>Project Activity Description <b class="star">*</b></mat-label>
+                    <angular-editor formControlName="project_activity_description" [config]="editorConfig" ></angular-editor>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-row button-group-lg mt-2 button-sticky">
+               <div class="col-md-12">
+                  <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >{{crudName}}</button>
+                  <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Close</button>
+               </div>
+            </div> -->
+            <!-- </form> -->
+         </div>
+      </div>
+
+</form>
+
+   </div>
+</div>
+
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="email-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+               <span aria-hidden="true">&times;</span>
+               </button>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editFormSendMail" (ngSubmit)="onSubmitSendEmail()" >
+            <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>To <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                            <input type="number" matInput name="" value="" formControlName="to_email">
+                               <mat-error *ngIf="Error('to_email','required')">Select To</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Subject <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                            <input type="text" matInput name="" value="" formControlName="subject">
+                               <mat-error *ngIf="Error('subject','required')">Enter Subject</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Comments <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="comments" [config]="editorConfig" ></angular-editor>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Attachment <b class="star">*</b></mat-label>
+                        <input type="file" name="" value="" formControlName="file_name" accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf" (change)="onSendMailFileHandler($event)">
+                    </div>
+                </div>
+            </div>
+            <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+
+                 <input placeholder="" type="hidden" formControlName="formulation_of_approach_paper">
+
+                  <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Send</button>
+                  <button type="button" class="btn btn-outline-primary" #closebuttonemail data-dismiss="modal" (click)="Emailclose()">Close</button>
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="activity-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-xl">
+
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Activity Status</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+               <span aria-hidden="true">&times;</span>
+               </button>
+         </div>
+         <div class="modal-body form-style-md form-style-font linux">
+            <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+            </div>
+            <form [formGroup]="this.editFormApproval" (ngSubmit)="onSubmitApproval()" >
+            <div class="form-row">
+                  <div class="col-md-12">
+                    <div class="matt-group">
+                        <div class="matt-group">
+                        <mat-label>Status <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                          <mat-select formControlName="approved_status" placeholder="Select Status" >
+                             <mat-option>None</mat-option>
+                             <mat-option *ngFor="let global_statuse of global_statuses" [value]="global_statuse.id">{{global_statuse.name}}</mat-option>
+                          </mat-select>
+                       <mat-error *ngIf="Error('approved_status','required')">Select Status</mat-error>
+                        </mat-form-field>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved By <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                          <input type="text" matInput name="" value="" formControlName="approved_by_name" readonly>
+                          <input placeholder="" type="hidden" formControlName="approved_by">
+                          <mat-error *ngIf="Error('approved_by','required')">Enter Approved By</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Approved On <b class="star">*</b></mat-label>
+                        <mat-form-field appearance="legacy">
+                          <input type="text" matInput name="" value="" formControlName="approved_on" readonly>
+                          <mat-error *ngIf="Error('approved_on','required')">Enter Approved On</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="matt-group">
+                        <mat-label>Remarks <b class="star">*</b></mat-label>
+                        <angular-editor formControlName="approved_remark" [config]="editorConfig" ></angular-editor>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row button-group-lg mt-2">
+               <div class="col-md-12">
+                 <input placeholder="" type="hidden" formControlName="id">
+                 <input placeholder="" type="hidden" formControlName="project">
+                  <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Save</button>
+                  <button type="button" class="btn btn-outline-primary" #closebuttonapproved data-dismiss="modal" (click)="Approvalclose()" >Close</button>
+               </div>
+            </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- modal -->
+<div class="modal fade master-modal-style" id="upload-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Upload Documents</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+           <form [formGroup]="this.editFormDocument" (ngSubmit)="onSubmitDocument()" #localform="ngForm">
+           <div class="form-row">
+               <div class="col-md-12">
+                   <div class="matt-group">
+                       <mat-label>Document Name <b class="star">*</b></mat-label>
+                       <mat-form-field appearance="legacy">
+                          <input type="text" matInput placeholder="Enter Document Name"  name="" value="" formControlName="document_name" maxlength="15">
+                          <mat-error *ngIf="Error('document_name','required')">Enter Document Name</mat-error>
+                       </mat-form-field>
+                   </div>
+               </div>
+               <div class="col-md-12">
+                   <div class="matt-group">
+                       <mat-label>Document Remarks <b class="star">*</b></mat-label>
+                       <mat-form-field appearance="legacy">
+                          <textarea matInput placeholder="Enter Remarks" formControlName="document_remark" maxlength="50"></textarea>
+                             <mat-error *ngIf="Error('document_remark','required')">Enter Document Remarks
+                             </mat-error>
+                       </mat-form-field>
+                   </div>
+               </div>
+               <div class="col-md-12">
+                 <div class="matt-group">
+                     <mat-label>Attachment <b class="star">*</b></mat-label>
+                     <input type="file" name="" value="" formControlName="file_name" accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.txt,.pdf" (change)="onFileHandler($event)">
+                     <mat-error *ngIf="editFormDocument.get('file_name')?.errors?.required && showError">Select File</mat-error>
+                 </div>
+             </div>
+               <!-- <div class="col-md-12">
+                  <div class="matt-group">
+                       <mat-label>Remarks <b class="star">*</b></mat-label>
+                       <angular-editor formControlName="remarks" [config]="editorConfig" ></angular-editor>
+                   </div>
+               </div> -->
+           </div>
+           <div class="form-row">
+              <div class="col-md-12">
+                 <table class="table table-bordered upload-tables">
+                    <thead>
+                       <tr>
+                          <th>Document Name </th>
+                          <th>Document Remarks</th>
+                          <th>Actions</th>
+                       </tr>
+                    </thead>
+                    <tbody>
+                       <tr *ngFor="let document of documentList">
+                          <td>{{document.document_name}}</td>
+                          <td>{{document.document_remark}}</td>
+                          <td>
+                             <div class="action-icons-group">
+                                <ul>
+                                   <li><a href="{{FileUrl}}{{document.file_name}}" target="blank" class="edit-icon text-primary" ><span class="material-icons">download</span></a></li>
+                                   <li><a href="javascript:;" class="text-danger"><span class="material-icons" (click)="onDeleteDocument(document)">delete_outline</span></a></li>
+                                </ul>
+                             </div>
+                          </td>
+                       </tr>
+                    </tbody>
+                 </table>
+              </div>
+           </div>
+           <div class="form-row button-group-lg mt-2">
+              <div class="col-md-12">
+                 <input placeholder="" type="hidden" formControlName="formulation_of_approach_paper">
+                 <button type="submit" class="btn btn-primary">Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal" (click)="Documentclose()">Close</button>
+              </div>
+           </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<!-- Assign Modal -->
+<div class="modal fade master-modal-style" id="assign-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Compartment</h5>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+           <form [formGroup]="this.editForm3" (ngSubmit)="onSubmit()" >
+           <div class="form-row">
+                 <div class="col-md-12">
+                   <div class="matt-group">
+                       <mat-label>User Roles <b class="star">*</b></mat-label>
+                       <mat-form-field appearance="legacy">
+                          <mat-select formControlName="project_id" placeholder="Select Rols" >
+                             <mat-option>None</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="Error('quantity','required')">Select Role</mat-error>
+                       </mat-form-field>
+                   </div>
+               </div>
+           </div>
+           <div class="form-row button-group-lg mt-2">
+              <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary" *ngIf="!isReadonly" >Assign</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Close</button>
+              </div>
+           </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<!-- Responsibility Modal -->
+<div class="modal fade master-modal-style" id="responsibility-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-xl">
+
+     <div class="modal-content">
+
+
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">{{crudName}} Responsibility</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+            <span aria-hidden="true">&times;</span>
+            </button>
+           <!-- <input type="checkbox" style="margin: 200px; border: 1px solid red;" [checked]="true"> -->
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+           <!-- <form [formGroup]="this.editFormResponsibility1" (ngSubmit)="onSubmitResponsibility()" > -->
+           <div class="card">
+              <div class="card-body">
+                 <div class="responsibility-staff">
+                    <div class="form-row">
+                       <div class="col-md-3">
+                          <div class="card compartment-list">
+                             <div class="card-header">
+                                Sections List
+                             </div>
+                             <div class="card-body">
+                                <div class="form-check-inline2 check-block">
+                                   <div class="form-check form-check-inline sections-list" *ngFor="let section of sections; let i=index" >
+
+                                      <a href="javascript:;" (click)="onClickSection(section)" class="sections_a {{ currentSection && currentSection.id==section.id?'active':'' }}">{{section.name}} <span class="material-icons-outlined">chevron_right</span></a>
+
+                                    </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="col-md-2">
+                          <div class="card compartment-list">
+                             <div class="card-header">
+                                Directorate List
+                             </div>
+                             <div class="card-body">
+                                 <div class="form-check-inline2 check-block" >
+
+                                 <ng-container *ngIf="currentSection">
+                                    <div class="form-check form-check-inline unit-list" *ngFor="let unit of currentSection.units; let i=index" >
+                                       <a href="javascript:;" (click)="onClickUnit(unit)" class="sections_a {{ currentUnit && currentUnit.id==unit.id?'active':'' }}">{{unit.unit.name}} <span class="material-icons-outlined">chevron_right</span></a>
+
+                                    </div>
+                                 </ng-container>
+
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                       <div class="col-md-7">
+                          <div class="card compartment-list">
+                             <div class="card-header">
+                                {{ currentUnit?currentUnit.unit.name+' - ':'' }} Area Of Responsibilty
+                             </div>
+                             <div class="card-body">
+                                <div class="form-row">
+                                   <div class="col-md-4">
+                                      <div class="compartment-list">
+                                         <h6>Compartments</h6>
+                                         <div class="comp-scroll">
+
+                                         <div class="form-check-inline2 check-block">
+                                          <ng-container *ngIf="currentUnit">
+                                             <div class="form-check form-check-inline" >
+                                               
+                                                   <mat-checkbox class="example-margin mr-2" (change)="selectAllCompartments($event)"  id="-1" >Select All </mat-checkbox><br>
+                                                   <ng-container  *ngFor="let compartment of currentUnit.compartments; let i=index">
+                                                      <mat-checkbox class="example-margin mr-2" #sComponents id="{{'c_'+compartment.id}}" value="{{compartment.id}}" >{{compartment.name}}</mat-checkbox>
+                                                      <br>
+                                                   </ng-container>
+                                               
+                                             </div>
+                                          </ng-container>
+
+
+                                         </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                   <div class="col-md-4">
+                                      <div class="compartment-list">
+                                         <h6>Systems</h6>
+                                         <div class="comp-scroll">
+                                            <div class="form-check-inline2 check-block">
+                                                <ng-container *ngIf="currentUnit">
+                                                   <div class="form-check form-check-inline"  >
+                                                      <mat-checkbox class="example-margin mr-2" (change)="selectAllSystems($event)" id="-2" >Select All</mat-checkbox>
+                                                      <ng-container  *ngFor="let system of currentUnit.systems; let i=index">
+                                                         <br>
+                                                         <mat-checkbox class="example-margin mr-2" #sSystems id="{{'s_'+system.id}}" value="{{system.id}}" >{{system.name}}</mat-checkbox>
+
+                                                      </ng-container>
+
+                                                   </div>
+                                                </ng-container>
+                                            </div>
+
+                                         </div>
+                                      </div>
+                                   </div>
+                                   <div class="col-md-4">
+                                      <div  class="compartment-list">
+                                         <h6>Equipments</h6>
+                                         <div class="comp-scroll" id="sanple" >
+
+                                             <ng-container *ngIf="currentUnit">
+                                                <div class="form-check form-check-inline" >
+                                                   <mat-checkbox class="example-margin mr-2" (change)="selectAllEquipments($event)" id="-3" >Select All</mat-checkbox>
+                                                      <ng-container  *ngFor="let equipment of currentUnit.equipments; let i=index" >
+                                                         <br>
+                                                         <mat-checkbox class="example-margin mr-2" #sEquipments id="{{'e_'+equipment.id}}" value="{{equipment.id}}" >{{equipment.name}}</mat-checkbox>
+
+                                                      </ng-container>
+
+                                                </div>
+                                             </ng-container>
+
+
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                </div>
+              </div>
+           </div>
+           <div class="form-row button-group-lg mt-2">
+              <div class="col-md-12">
+                 <input placeholder="" type="hidden" formControlName="formulation_of_approach_paper">
+                 <input placeholder="" type="hidden" formControlName="project">
+                 <button type="submit" class="btn btn-primary"  (click)="onSaveResponsibility()">Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal" (click)="Responsibilityclose()">Close</button>
+              </div>
+           </div>
+           <!-- </form> -->
+        </div>
+     </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade master-modal-style" id="responsibility-modal1" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Responsibility</h5>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+           <form [formGroup]="this.editForm1" (ngSubmit)="onSubmit()" >
+              <div class="card">
+                 <div class="card-body">
+                    <div class="responsibility-staff responsibility-staff-disable">
+                       <div class="form-row">
+                          <div class="col-md-3">
+                             <div class="card compartment-list">
+                                <div class="card-header">
+                                   Sections List
+                                </div>
+                                <div class="card-body">
+                                   <div class="form-check-inline2 check-block">
+                                     <ng-container  *ngFor="let item of responsibility; let i= index;">
+                                       <ng-container *ngFor="let item1 of item.sections; let i= index;">
+                                      <div class="form-check form-check-inline">
+                                         <label class="form-check-label" for="inlineCheckbox1">{{item1.name}}</label>
+                                       </div>
+                                      </ng-container>
+                                   </ng-container>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                          <div class="col-md-3">
+                             <div class="card compartment-list">
+                                <div class="card-header">
+                                   Directorate List
+                                </div>
+                                <div class="card-body">
+                                   <div class="form-check-inline2 check-block">
+                                     <ng-container  *ngFor="let item of responsibility; let i= index;">
+                                       <ng-container *ngFor="let item1 of item.units; let i= index;">
+                                      <div class="form-check form-check-inline">
+                                         <label class="form-check-label" for="inlineCheckbox1">{{item1.name}}</label>
+                                       </div>
+                                      </ng-container>
+                                   </ng-container>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                          <div class="col-md-6">
+                             <div class="card">
+                                <div class="card-header">
+                                   DSR - Area Of Responsibilty
+                                </div>
+                                <div class="card-body">
+                                   <div class="row">
+                                      <div class="col-md-4">
+                                         <div class="compartment-list">
+                                            <h6>Compartments</h6>
+                                            <div class="comp-scroll">
+                                               <div class="form-check-inline2 check-block">
+                                                 <ng-container  *ngFor="let item of responsibility; let i= index;">
+                                                   <ng-container *ngFor="let item1 of item.compartments; let i= index;">
+                                                  <div class="form-check form-check-inline">
+                                                     <label class="form-check-label" for="inlineCheckbox1">{{item1.name}}</label>
+                                                   </div>
+                                                  </ng-container>
+                                               </ng-container>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                         <div class="compartment-list">
+                                            <h6>Systems</h6>
+                                            <div class="comp-scroll">
+
+                                            <div class="form-check-inline2 check-block comp-scroll">
+                                             <ng-container  *ngFor="let item of responsibility; let i= index;">
+                                               <ng-container *ngFor="let item1 of item.systems; let i= index;">
+                                              <div class="form-check form-check-inline">
+                                                 <label class="form-check-label" for="inlineCheckbox1">{{item1.name}}</label>
+                                               </div>
+                                              </ng-container>
+                                           </ng-container>
+                                            </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                      <div class="col-md-4">
+                                         <div class="compartment-list">
+                                            <h6>Equipments</h6>
+                                            <div class="comp-scroll">
+
+                                            <div class="form-check-inline2 check-block">
+                                             <ng-container  *ngFor="let item of responsibility; let i= index;">
+                                               <ng-container *ngFor="let item1 of item.equipments; let i= index;">
+                                              <div class="form-check form-check-inline">
+                                                 <label class="form-check-label" for="inlineCheckbox1">{{item1.name}}</label>
+                                               </div>
+                                              </ng-container>
+                                           </ng-container>
+                                            </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                       </div>
+                   </div>
+                 </div>
+              </div>
+           <div class="form-row button-group-lg mt-2">
+              <div class="col-md-12">
+                <input placeholder="" type="hidden" formControlName="formulation_of_approach_paper">
+                <input placeholder="" type="hidden" formControlName="project">
+                <button type="submit" class="btn btn-primary"  (click)="onSubmitResponsibility()">Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Close</button>
+              </div>
+           </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+ -->

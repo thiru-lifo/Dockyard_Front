@@ -1,0 +1,121 @@
+<section class="body-card">
+  <div class="container-fluid">
+    <div class="row d-flex align-items-center form-style-md">
+      <div class="col-md-6">
+        <div class="heading-style3">
+          <h3>Dashboard</h3>
+        </div>
+      </div>
+      <div class="col-md-6">
+          <div class="matt-group  matt-select-multi1">
+          <mat-form-field appearance="fill">
+            <mat-select placeholder="Choose widgets" multiple (selectionChange)="onChangeWidget()" [(ngModel)]="bls_custom_dashboard">
+              <mat-option value="project-list">Projects</mat-option>
+              <!-- <mat-option value="sub-module-details">Sub Module Details</mat-option> -->
+           </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-6">
+        <div class="content-box bg1 d-flex align-items-center content-big-box">
+          <div class="left-icon">
+            <img src="assets/images/cruise.png" alt="" title="">
+          </div>
+          <div class="content-right">
+            <h3>Build Specifications <span>{{all_bls_active_count > 0 ? all_bls_active_count : 0}}</span></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class=""  *ngIf="checkWidgetExists('project-list')">
+      <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+         <ngb-panel id="static-b3" title="Projects">
+
+            <ng-template ngbPanelContent>
+                <div class="add-right">
+                <a href="#" routerLink="/transaction/psr/initiation-notes"><span class="material-icons">add</span></a>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4"  *ngFor="let project of projectList">
+                    <div class="card shadow-sm p-3 mb-5 bg-white rounded">
+                      <div class="card-body">
+                        <h5 class="card-title">{{project.project[0]['name']}}</h5>
+                        <p class="card-text">Class: {{project.project[0]['class_id']['name']}}</p>
+
+                        <a href="#" class="btn btn-primary" routerLink="/transaction/psr/dashboard" [queryParams]="{project_id: project.project[0]['id']}">View Detail</a>
+                        &nbsp;&nbsp;
+                        <a href="#" data-toggle="modal" data-target="#crud-countries" class="btn btn-primary"  (click)="getProjectLog(project.project[0]['id'])" >View Log</a>
+
+                        
+
+  
+
+
+                        
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </ng-template>
+            
+         </ngb-panel>
+       </ngb-accordion>
+      
+    </div>
+
+
+  <!-- <div class=""  *ngIf="checkWidgetExists('sub-module-details')"> -->
+    <ngb-accordion class="accordion2" [closeOthers]="true" activeIds="static-b3">
+      <ngb-panel id="static-b3" title="Sub Module Details">
+        <ng-template ngbPanelContent>
+    <div class="card-body mt-n10">
+      <div id="chartdivSubModule" style="width: 100%; height: 450px"></div>
+      
+    </div>
+   </ng-template>
+   </ngb-panel>
+   </ngb-accordion>
+  <!-- </div> -->
+    
+  </div>
+</section>
+<div class="modal fade master-modal-style" id="crud-countries" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Project Log</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close" matTooltip="Close" matTooltipClass="custom-tooltip">
+              <span aria-hidden="true">&times;</span>
+              </button>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+          <div class="container mt-5 mb-5">
+            <div class="row">
+              <div class="col-md-12">
+                <h4>Project Log</h4>
+                <div *ngFor="let role of projectlog" >
+                  
+                <ul class="timeline">
+                 
+                  
+                  <li>
+                    <a  href="javascript:void(0)">{{role.project.name}}</a>
+                    <a href="javascript:void(0)" class="float-right">{{moment(role.created_on).format('DD-MM-YYYY')}} </a>
+                    <p>{{role.msg}}</p>
+                  </li>      
+                </ul>
+              </div>
+              </div>
+            </div>
+        </div>
+     </div>
+  </div>
+</div>
+

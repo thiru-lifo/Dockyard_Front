@@ -1,0 +1,115 @@
+<app-header *ngIf="showHead"></app-header>
+<app-sidemenu *ngIf="showHead"></app-sidemenu>
+<router-outlet></router-outlet>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">You Have Been Idle!</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {{idleState}}
+        <div class="form-row button-group-lg button-auto mt-2 btn-sm">
+          <div class="col-md-6">
+              <button type="button" (click)="logout()" class="btn btn-primary">Logout</button>
+          </div>
+          <div class="col-md-6">
+              <button type="button" (click)="stay()" class="btn btn-outline-primary">Stay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade master-modal-style" id="create-project-modal" data-keyboard="false" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Create Projects</h5>
+        </div>
+        <div class="modal-body form-style-md form-style-font linux">
+           <div id="hide_alert" class="alert alert-danger form-error-message my-4" *ngIf="error_msg==true">{{ErrorMsg}}
+           </div>
+           <form [formGroup]="this.editForm" (ngSubmit)="onSubmit()" >
+           <div class="form-row">
+
+              <div class="col-md-6">
+                 <div class="matt-group">
+                    <mat-label>Name <b class="star">*</b></mat-label>
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" formControlName="name" maxlength="100"
+                       >
+                       <mat-error *ngIf="Error('name','required')">Enter name</mat-error>
+                       <mat-error *ngIf="Error('name','pattern')">Alphabets characters only</mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div class="col-md-6">
+                 <div class="matt-group">
+                    <mat-label>Descriptions </mat-label>
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" formControlName="description" maxlength="100"
+                       >
+                       <mat-error *ngIf="Error('description','required')">Enter description</mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div class="col-md-6">
+                 <div class="matt-group">
+                    <mat-label>Code <b class="star">*</b></mat-label>
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" class="code_field" formControlName="code" maxlength="15" >
+                       <mat-error *ngIf="Error('code','required')">Enter code</mat-error>
+                       <mat-error *ngIf="Error('code','pattern')">Alpha-numeric characters only</mat-error>
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div class="col-md-6" hidden>
+                 <div class="matt-group">
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" formControlName="created_by"  >
+                    </mat-form-field>
+                 </div>
+              </div>
+              <div class="col-md-6" hidden>
+                 <div class="matt-group">
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" formControlName="created_ip"  >
+                    </mat-form-field>
+                 </div>
+              </div>
+              <!-- <div class="col-md-6">
+                 <div class="matt-group">
+                    <mat-label>Sequence </mat-label>
+                    <mat-form-field appearance="legacy">
+                       <input matInput placeholder="" formControlName="sequence" maxlength="3" >
+                       <mat-error *ngIf="Error('sequence','pattern')">Accept numeric values only</mat-error>
+                    </mat-form-field>
+                 </div>
+              </div> -->
+              <div class="col-md-12">
+                 <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input " id="exampleCheck1" formControlName="status" >
+                    <label class="form-check-label" for="exampleCheck1" >Active</label>
+                 </div>
+              </div>
+           </div>
+           <div class="form-row button-group-lg button-auto mt-2">
+              <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary" >Save</button>
+                 <button type="button" class="btn btn-outline-primary" #closebutton data-dismiss="modal">Cancel</button>
+              </div>
+           </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
